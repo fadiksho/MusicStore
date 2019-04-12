@@ -36,11 +36,12 @@ namespace MusicStore.MVC.Persistence
 
       await context.Genres.AddAsync(genreEntity);
     }
-    public async Task UpdateAsync(int genreId, GenreForUpdatingDto dto)
+    public async Task UpdateAsync(GenreForUpdatingDto dto)
     {
-      var genre = await context.Genres.FirstOrDefaultAsync(g => g.Id == genreId);
+      var genreEntity = await context.Genres
+        .FirstOrDefaultAsync(g => g.Id == dto.Id);
 
-      mapper.Map(genre, dto);
+      mapper.Map(dto, genreEntity);
     }
     public async Task DeleteAsync(int genreId)
     {

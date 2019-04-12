@@ -7,7 +7,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{65761665-2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{68527493-42CA-4FA1-ADD7-054FB1B2B1B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicStore.MVC", "src\MusicStore.MVC\MusicStore.MVC.csproj", "{EF62A510-B8D1-409A-A928-896046090C36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicStore.MVC", "src\MusicStore.MVC\MusicStore.MVC.csproj", "{EF62A510-B8D1-409A-A928-896046090C36}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicStore.Test", "test\MusicStore.Test\MusicStore.Test.csproj", "{BF01310B-6BCF-4D52-9A5D-5A6F41913E5F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,12 +21,17 @@ Global
 		{EF62A510-B8D1-409A-A928-896046090C36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF62A510-B8D1-409A-A928-896046090C36}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF62A510-B8D1-409A-A928-896046090C36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF01310B-6BCF-4D52-9A5D-5A6F41913E5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF01310B-6BCF-4D52-9A5D-5A6F41913E5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF01310B-6BCF-4D52-9A5D-5A6F41913E5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF01310B-6BCF-4D52-9A5D-5A6F41913E5F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{EF62A510-B8D1-409A-A928-896046090C36} = {68527493-42CA-4FA1-ADD7-054FB1B2B1B1}
+		{BF01310B-6BCF-4D52-9A5D-5A6F41913E5F} = {65761665-2B8E-4A1C-ACCC-E69B5D1A850A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {44324799-E3A1-45D0-8347-E9C09B8DE5E4}

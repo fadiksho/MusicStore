@@ -34,8 +34,10 @@ namespace MusicStore.MVC.Persistence
 
       return mapper.Map<Song>(songEntity);
     }
-    public async Task<PaggingResult<Song>> GetSongPage(IPaggingQuery query)
+    public async Task<PaggingResult<Song>> GetSongPage(IPaggingQuery query = null)
     {
+      if (query == null) query = new PaggingQuery();
+
       var songsQuery = context.Songs.Include(s => s.Genres)
         .Include(s => s.Genres)
           .ThenInclude(s => s.Genre)
@@ -63,11 +65,10 @@ namespace MusicStore.MVC.Persistence
 
       await context.AddAsync(songEntity);
     }
-    public async Task UpdateAsync(int songId, SongForUpdatingDto dto)
+    public async Task UpdateAsync(SongForUpdatingDto dto)
     {
       var songEntity = await context.Songs
-        .Include(s => s.Album)
-        .FirstOrDefaultAsync(s => s.Id == songId);
+        .FirstOrDefaultAsync(s => s.Id == dto.Id);
 
       mapper.Map(dto, songEntity);
     }
@@ -79,7 +80,7 @@ namespace MusicStore.MVC.Persistence
       context.Songs.Remove(songEntity);
     }
 
-    public async Task AssignSongToAlbum(int songId, int? albumId)
+    public async Task AddSongToAlbum(int songId, int? albumId)
     {
       var songEntity = await context.Songs
         .FirstOrDefaultAsync(s => s.Id == songId);

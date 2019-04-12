@@ -45,12 +45,12 @@ namespace MusicStore.MVC.Persistence
 
       await context.Albums.AddAsync(albumEntity);
     }
-    public async Task UpdateAsync(int albumId, AlbumForUpdatingDto dto)
+    public async Task UpdateAsync(AlbumForUpdatingDto dto)
     {
       var albumEntity = await context.Albums
-        .FirstOrDefaultAsync(a => a.Id == albumId);
+        .FirstOrDefaultAsync(a => a.Id == dto.Id);
 
-      mapper.Map(albumEntity, dto);
+      mapper.Map(dto, albumEntity);
     }
     public async Task DeleteAsync(int albumId)
     {

@@ -10,7 +10,7 @@ namespace MusicStore.MVC.Repository
     Task<Album> GetAsync(int albumId);
     Task<IEnumerable<Album>> GetAllAsync();
     Task AddAsync(AlbumForCreatingDto dto);
-    Task UpdateAsync(int albumId, AlbumForUpdatingDto dto);
+    Task UpdateAsync(AlbumForUpdatingDto dto);
     Task DeleteAsync(int albumId);
   }
 }

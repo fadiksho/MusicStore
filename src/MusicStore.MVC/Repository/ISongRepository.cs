@@ -8,11 +8,11 @@ namespace MusicStore.MVC.Repository
   public interface ISongRepository
   {
     Task<Song> GetAsync(int songId);
-    Task<PaggingResult<Song>> GetSongPage(IPaggingQuery query);
+    Task<PaggingResult<Song>> GetSongPage(IPaggingQuery query = null);
     Task AddAsync(SongForCreatingDto dto);
-    Task UpdateAsync(int songId, SongForUpdatingDto dto);
+    Task UpdateAsync(SongForUpdatingDto dto);
     Task DeleteAsync(int songId);
 
-    Task AssignSongToAlbum(int songId, int? albumId);
+    Task AddSongToAlbum(int songId, int? albumId);
   }
 }

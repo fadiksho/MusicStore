@@ -9,7 +9,7 @@ namespace MusicStore.MVC.Repository
   {
     Task<IEnumerable<Genre>> GetAllAsync();
     Task AddAsync(GenreForCreatingDto dto);
-    Task UpdateAsync(int genreId, GenreForUpdatingDto dto);
+    Task UpdateAsync(GenreForUpdatingDto dto);
     Task DeleteAsync(int genreId);
   }
 }

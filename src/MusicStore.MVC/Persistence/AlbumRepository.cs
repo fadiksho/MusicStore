@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MusicStore.MVC.Dto;
+using MusicStore.MVC.Entities;
 using MusicStore.MVC.Models;
 using MusicStore.MVC.Persistence.Data;
 using MusicStore.MVC.Repository;
@@ -19,26 +21,43 @@ namespace MusicStore.MVC.Persistence
       this.mapper = mapper;
     }
 
-    public Task<Album> GetAsync(int albumId)
+    public async Task<Album> GetAsync(int albumId)
     {
-      throw new System.NotImplementedException();
+      var albumEntity = await context.Albums
+        .Include(a => a.Songs)
+        .AsNoTracking()
+        .FirstOrDefaultAsync(a => a.Id == albumId);
+
+      return mapper.Map<Album>(albumEntity);
     }
-    public Task<IEnumerable<Album>> GetAllAsync()
+    public async Task<IEnumerable<Album>> GetAllAsync()
     {
-      throw new System.NotImplementedException();
+      var albumEntities = await context.Albums
+        .AsNoTracking()
+        .ToListAsync();
+
+      return mapper.Map<IEnumerable<Album>>(albumEntities);
     }
 
-    public Task AddAsync(AlbumForCreatingDto dto)
+    public async Task AddAsync(AlbumForCreatingDto dto)
     {
-      throw new System.NotImplementedException();
+      var albumEntity = mapper.Map<AlbumEntity>(dto);
+
+      await context.Albums.AddAsync(albumEntity);
     }
-    public Task UpdateAsync(int albumId, AlbumForUpdatingDto dto)
+    public async Task UpdateAsync(int albumId, AlbumForUpdatingDto dto)
     {
-      throw new System.NotImplementedException();
+      var albumEntity = await context.Albums
+        .FirstOrDefaultAsync(a => a.Id == albumId);
+
+      mapper.Map(albumEntity, dto);
     }
-    public Task DeleteAsync(int albumId)
+    public async Task DeleteAsync(int albumId)
     {
-      throw new System.NotImplementedException();
+      var albumEntity = await context.Albums
+        .FirstOrDefaultAsync(a => a.Id == albumId);
+
+      context.Albums.Remove(albumEntity);
     }
   }
 }

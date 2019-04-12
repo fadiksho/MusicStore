@@ -1,6 +1,6 @@
-﻿using MusicStore.MVC.Dto;
+﻿using MusicStore.MVC.Abstraction.Pagination;
+using MusicStore.MVC.Dto;
 using MusicStore.MVC.Models;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MusicStore.MVC.Repository
@@ -8,7 +8,7 @@ namespace MusicStore.MVC.Repository
   public interface ISongRepository
   {
     Task<Song> GetAsync(int songId);
-    Task<IEnumerable<Song>> GetAllAsync();
+    Task<PaggingResult<Song>> GetSongPage(IPaggingQuery query);
     Task AddAsync(SongForCreatingDto dto);
     Task UpdateAsync(int songId, SongForUpdatingDto dto);
     Task DeleteAsync(int songId);

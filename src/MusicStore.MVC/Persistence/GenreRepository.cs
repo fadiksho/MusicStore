@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MusicStore.MVC.Dto;
+using MusicStore.MVC.Entities;
 using MusicStore.MVC.Models;
 using MusicStore.MVC.Persistence.Data;
 using MusicStore.MVC.Repository;
@@ -19,26 +21,32 @@ namespace MusicStore.MVC.Persistence
       this.mapper = mapper;
     }
 
-    public Task<Genre> GetAsync(int genreId)
+    public async Task<IEnumerable<Genre>> GetAllAsync()
     {
-      throw new System.NotImplementedException();
-    }
-    public Task<IEnumerable<Genre>> GetAllAsync()
-    {
-      throw new System.NotImplementedException();
+      var genreEntities = await context.Genres
+        .AsNoTracking()
+        .ToListAsync();
+
+      return mapper.Map<IEnumerable<Genre>>(genreEntities);
     }
 
-    public Task AddAsync(GenreForCreatingDto dto)
+    public async Task AddAsync(GenreForCreatingDto dto)
     {
-      throw new System.NotImplementedException();
+      var genreEntity = mapper.Map<GenreEntity>(dto);
+
+      await context.Genres.AddAsync(genreEntity);
     }
-    public Task UpdateAsync(int genreId, GenreForUpdatingDto dto)
+    public async Task UpdateAsync(int genreId, GenreForUpdatingDto dto)
     {
-      throw new System.NotImplementedException();
+      var genre = await context.Genres.FirstOrDefaultAsync(g => g.Id == genreId);
+
+      mapper.Map(genre, dto);
     }
-    public Task DeleteAsync(int genreId)
+    public async Task DeleteAsync(int genreId)
     {
-      throw new System.NotImplementedException();
+      var genreEntity = await context.Genres.FirstOrDefaultAsync(g => g.Id == genreId);
+
+      context.Genres.Remove(genreEntity);
     }
   }
 }

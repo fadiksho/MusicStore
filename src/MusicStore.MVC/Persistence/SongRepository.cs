@@ -1,7 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using MusicStore.MVC.Abstraction.Pagination;
 using MusicStore.MVC.Dto;
+using MusicStore.MVC.Entities;
+using MusicStore.MVC.Extensions;
 using MusicStore.MVC.Models;
 using MusicStore.MVC.Persistence.Data;
 using MusicStore.MVC.Repository;
@@ -19,31 +24,67 @@ namespace MusicStore.MVC.Persistence
       this.mapper = mapper;
     }
 
-    public Task<Song> GetAsync(int songId)
+    public async Task<Song> GetAsync(int songId)
     {
-      throw new System.NotImplementedException();
+      var songEntity = await context.Songs
+        .Include(s => s.Album)
+        .Include(s => s.Genres)
+          .ThenInclude(s => s.Genre)
+        .FirstOrDefaultAsync(s => s.Id == songId);
+
+      return mapper.Map<Song>(songEntity);
     }
-    public Task<IEnumerable<Song>> GetAllAsync()
+    public async Task<PaggingResult<Song>> GetSongPage(IPaggingQuery query)
     {
-      throw new System.NotImplementedException();
+      var songsQuery = context.Songs.Include(s => s.Genres)
+        .Include(s => s.Genres)
+          .ThenInclude(s => s.Genre)
+        .AsTracking()
+        .AsQueryable();
+
+      var totalItems = songsQuery.Count();
+
+      var songsEntities = await songsQuery.ApplayPaging(query).ToArrayAsync();
+
+      var paggingResult = new PaggingResult<Song>
+      {
+        CurrentPage = query.Page,
+        PageSize = query.PageSize,
+        TotalItems = totalItems,
+        TResult = mapper.Map<IEnumerable<Song>>(songsEntities)
+      };
+
+      return paggingResult;
     }
 
-    public Task AddAsync(SongForCreatingDto dto)
+    public async Task AddAsync(SongForCreatingDto dto)
     {
-      throw new System.NotImplementedException();
+      var songEntity = mapper.Map<SongEntity>(dto);
+
+      await context.AddAsync(songEntity);
     }
-    public Task UpdateAsync(int songId, SongForUpdatingDto dto)
+    public async Task UpdateAsync(int songId, SongForUpdatingDto dto)
     {
-      throw new System.NotImplementedException();
+      var songEntity = await context.Songs
+        .Include(s => s.Album)
+        .FirstOrDefaultAsync(s => s.Id == songId);
+
+      mapper.Map(dto, songEntity);
     }
-    public Task DeleteAsync(int songId)
+    public async Task DeleteAsync(int songId)
     {
-      throw new System.NotImplementedException();
+      var songEntity = await context.Songs
+        .FirstOrDefaultAsync(s => s.Id == songId);
+
+      context.Songs.Remove(songEntity);
     }
 
-    public Task AssignSongToAlbum(int songId, int? albumId)
+    public async Task AssignSongToAlbum(int songId, int? albumId)
     {
-      throw new System.NotImplementedException();
+      var songEntity = await context.Songs
+        .FirstOrDefaultAsync(s => s.Id == songId);
+
+      songEntity.AlbumId = albumId;
     }
   }
 }

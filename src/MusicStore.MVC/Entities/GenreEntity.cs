@@ -8,7 +8,7 @@ namespace MusicStore.MVC.Entities
 
     public string Name { get; set; }
 
-    public List<GenreSongEntity> Songs { get; set; }
+    public List<GenreSongEntity> GenreSong { get; set; }
       = new List<GenreSongEntity>();
   }
 }

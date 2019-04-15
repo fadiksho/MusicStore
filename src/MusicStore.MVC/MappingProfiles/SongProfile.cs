@@ -11,7 +11,7 @@ namespace MusicStore.MVC.MappingProfiles
     public SongProfile()
     {
       CreateMap<SongEntity, Song>()
-        .ForMember(model => model.Genres, opt => opt.MapFrom(x => x.Genres.Select(y => y.Genre)));
+        .ForMember(model => model.Genres, opt => opt.MapFrom(x => x.GenreSong.Select(y => y.Genre)));
       CreateMap<SongForCreatingDto, SongEntity>();
       CreateMap<SongForUpdatingDto, SongEntity>();
     }

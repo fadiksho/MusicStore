@@ -10,7 +10,7 @@ namespace MusicStore.MVC.Entities
 
     public int? AlbumId { get; set; }
     public AlbumEntity Album { get; set; }
-    public List<GenreSongEntity> Genres { get; set; }
+    public List<GenreSongEntity> GenreSong { get; set; }
       = new List<GenreSongEntity>();
   }
 }

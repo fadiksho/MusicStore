@@ -29,15 +29,13 @@ namespace MusicStore.MVC.Persistence.Data
       modelBuilder.Entity<GenreSongEntity>()
         .HasKey(gs => new { gs.GenreId, gs.SongId });
       modelBuilder.Entity<GenreSongEntity>()
-        .HasOne(s => s.Song)
-        .WithMany(g => g.Genres)
-        .HasForeignKey(g => g.GenreId);
+        .HasOne<SongEntity>(s => s.Song)
+        .WithMany(g => g.GenreSong)
+        .HasForeignKey(g => g.SongId);
       modelBuilder.Entity<GenreSongEntity>()
-        .HasOne(g => g.Genre)
-        .WithMany(s => s.Songs)
-        .HasForeignKey(s => s.SongId);
-
-      
+        .HasOne<GenreEntity>(g => g.Genre)
+        .WithMany(s => s.GenreSong)
+        .HasForeignKey(s => s.GenreId);
     }
   }
 }

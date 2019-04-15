@@ -107,9 +107,74 @@ namespace MusicStore.Test.Repository
     }
 
     [Fact]
+    public async Task Set_Genres_To_Song_Should_Persiste()
+    {
+      var connection = new SqliteConnection("DataSource=:memory:");
+      connection.Open();
+      try
+      {
+        var options = new DbContextOptionsBuilder<MusicStoreContext>()
+                .UseSqlite(connection)
+                .Options;
+
+        var genresId = new List<int>();
+        var songId = 0;
+        using (var context = new MusicStoreContext(options))
+        {
+          context.Database.EnsureCreated();
+          var genres = new List<GenreEntity>
+          {
+            new GenreEntity
+            {
+              Name = "Genre 1"
+            },
+            new GenreEntity
+            {
+              Name = "Genre 2"
+            }
+          };
+          context.Genres.AddRange(genres);
+
+          var song = new SongEntity()
+          {
+            GenreSong = new List<GenreSongEntity>()
+            {
+              new GenreSongEntity
+              {
+                Genre = new GenreEntity()
+              }
+            }
+          };
+          context.Songs.Add(song);
+          context.SaveChanges();
+
+          genresId.Add(genres[0].Id);
+          genresId.Add(genres[1].Id);
+          songId = song.Id;
+        }
+
+        using (var context = new MusicStoreContext(options))
+        {
+          var unitOfWork = new UnitOfWork(context, _mapper);
+          await unitOfWork.Songs.SetGenresToSongAsync(songId, genresId);
+          await unitOfWork.SaveAsync();
+        }
+
+        using (var context = new MusicStoreContext(options))
+        {
+          var song = context.Songs.Include(c => c.GenreSong).First();
+          Assert.Equal(2, song.GenreSong.Count);
+        }
+      }
+      finally
+      {
+        connection.Close();
+      }
+    }
+
+    [Fact]
     public async Task Adding_Song_With_Invalid_AlbumId_Should_NOT_Persiste()
     {
-
       var connection = new SqliteConnection("DataSource=:memory:");
       var options = new DbContextOptionsBuilder<MusicStoreContext>()
         .UseSqlite(connection)
@@ -117,8 +182,6 @@ namespace MusicStore.Test.Repository
       connection.Open();
       try
       {
-
-
         using (var context = new MusicStoreContext(options))
         {
           context.Database.EnsureCreated();

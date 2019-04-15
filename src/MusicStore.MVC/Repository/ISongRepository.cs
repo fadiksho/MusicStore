@@ -1,6 +1,7 @@
 ﻿using MusicStore.MVC.Abstraction.Pagination;
 using MusicStore.MVC.Dto;
 using MusicStore.MVC.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MusicStore.MVC.Repository
@@ -14,5 +15,6 @@ namespace MusicStore.MVC.Repository
     Task DeleteAsync(int songId);
 
     Task AddSongToAlbum(int songId, int? albumId);
+    Task SetGenresToSongAsync(int songId, IEnumerable<int> genresId);
   }
 }

@@ -31,17 +31,10 @@ namespace MusicStore.Test.Repository
     [Fact]
     public async Task Add_Album_Should_Persiste()
     {
-      var connection = new SqliteConnection("DataSource=:memory:");
-      connection.Open();
-      try
+      using (var factory = new MusicStoreContextFactory())
       {
-        var options = new DbContextOptionsBuilder<MusicStoreContext>()
-                .UseSqlite(connection)
-                .Options;
-
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
-          context.Database.EnsureCreated();
           var unitOfWork = new UnitOfWork(context, _mapper);
 
           var album = new AlbumForCreatingDto
@@ -52,32 +45,21 @@ namespace MusicStore.Test.Repository
           await unitOfWork.Albums.AddAsync(album);
           await unitOfWork.SaveAsync();
         }
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           Assert.NotNull(context.Albums.First());
         }
-      }
-      finally
-      {
-        connection.Close();
       }
     }
 
     [Fact]
     public async Task Update_Album_Should_Persiste()
     {
-      var connection = new SqliteConnection("DataSource=:memory:");
-      connection.Open();
-      try
+      using (var factory = new MusicStoreContextFactory())
       {
-        var options = new DbContextOptionsBuilder<MusicStoreContext>()
-                .UseSqlite(connection)
-                .Options;
-        int albumId = 0;
-        using (var context = new MusicStoreContext(options))
+        var albumId = 0;
+        using (var context = factory.CreateMusicStoreContext())
         {
-          context.Database.EnsureCreated();
-
           var album = new AlbumEntity
           {
             Name = "Name",
@@ -88,7 +70,7 @@ namespace MusicStore.Test.Repository
 
           albumId = album.Id;
         }
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           var albumForUpdateDto = new AlbumForUpdatingDto
           {
@@ -100,34 +82,23 @@ namespace MusicStore.Test.Repository
           await unitOfWork.Albums.UpdateAsync(albumForUpdateDto);
           await unitOfWork.SaveAsync();
         }
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           var album = context.Albums.First();
           Assert.Equal("Updated", album.Name);
           Assert.Equal("Updated", album.Description);
         }
       }
-      finally
-      {
-        connection.Close();
-      }
     }
 
     [Fact]
     public async Task Delete_Album_Should_Persiste()
     {
-      var connection = new SqliteConnection("DataSource=:memory:");
-      connection.Open();
-      try
+      using (var factory = new MusicStoreContextFactory())
       {
-        var options = new DbContextOptionsBuilder<MusicStoreContext>()
-                .UseSqlite(connection)
-                .Options;
-        int albumId = 0;
-        using (var context = new MusicStoreContext(options))
+        var albumId = 0;
+        using (var context = factory.CreateMusicStoreContext())
         {
-          context.Database.EnsureCreated();
-
           var album = new AlbumEntity
           {
             Name = "Name",
@@ -138,40 +109,28 @@ namespace MusicStore.Test.Repository
 
           albumId = album.Id;
         }
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
-          
           var unitOfWork = new UnitOfWork(context, _mapper);
           await unitOfWork.Albums.DeleteAsync(albumId);
           await unitOfWork.SaveAsync();
         }
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           var album = context.Albums.FirstOrDefault();
           Assert.Null(album);
         }
-      }
-      finally
-      {
-        connection.Close();
       }
     }
 
     [Fact]
     public async Task Delete_Album_Should_Not_Delete_The_Songs_In_That_Album()
     {
-      var connection = new SqliteConnection("DataSource=:memory:");
-      connection.Open();
-      try
+      var albumId = 0;
+      using (var factory = new MusicStoreContextFactory())
       {
-        var options = new DbContextOptionsBuilder<MusicStoreContext>()
-                .UseSqlite(connection)
-                .Options;
-        int albumId = 0;
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
-          context.Database.EnsureCreated();
-
           var album = new AlbumEntity
           {
             Name = "Name",
@@ -186,41 +145,29 @@ namespace MusicStore.Test.Repository
 
           albumId = album.Id;
         }
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
-
           var unitOfWork = new UnitOfWork(context, _mapper);
           await unitOfWork.Albums.DeleteAsync(albumId);
           await unitOfWork.SaveAsync();
         }
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           var song = context.Songs.Include(s => s.Album).First();
           Assert.NotNull(song);
           Assert.Null(song.Album);
         }
       }
-      finally
-      {
-        connection.Close();
-      }
     }
 
     [Fact]
     public async Task Get_Album_Should_Not_Be_Null()
     {
-      var connection = new SqliteConnection("DataSource=:memory:");
-      connection.Open();
-      try
+      using (var factory = new MusicStoreContextFactory())
       {
-        var options = new DbContextOptionsBuilder<MusicStoreContext>()
-                .UseSqlite(connection)
-                .Options;
-        int albumId = 0;
-        using (var context = new MusicStoreContext(options))
+        var albumId = 0;
+        using (var context = factory.CreateMusicStoreContext())
         {
-          context.Database.EnsureCreated();
-
           var album = new AlbumEntity
           {
             Name = "Name",
@@ -231,16 +178,12 @@ namespace MusicStore.Test.Repository
 
           albumId = album.Id;
         }
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           var unitOfWork = new UnitOfWork(context, _mapper);
           var album = await unitOfWork.Albums.GetAsync(albumId);
           Assert.NotNull(album);
         }
-      }
-      finally
-      {
-        connection.Close();
       }
     }
   }

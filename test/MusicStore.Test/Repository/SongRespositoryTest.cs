@@ -33,17 +33,10 @@ namespace MusicStore.Test.Repository
     [Fact]
     public async Task Adding_Song_Should_Persiste()
     {
-      var connection = new SqliteConnection("DataSource=:memory:");
-      connection.Open();
-      try
+      using (var factory = new MusicStoreContextFactory())
       {
-        var options = new DbContextOptionsBuilder<MusicStoreContext>()
-                .UseSqlite(connection)
-                .Options;
-
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
-          context.Database.EnsureCreated();
           var unitOfWork = new UnitOfWork(context, _mapper);
 
           var song = new SongForCreatingDto
@@ -54,29 +47,19 @@ namespace MusicStore.Test.Repository
           await unitOfWork.Songs.AddAsync(song);
           await unitOfWork.SaveAsync();
         }
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           Assert.NotNull(context.Songs.First());
         }
-      }
-      finally
-      {
-        connection.Close();
       }
     }
 
     [Fact]
     public async Task Adding_Song_With_Album_Should_Persiste()
     {
-      var connection = new SqliteConnection("DataSource=:memory:");
-      connection.Open();
-      try
+      using (var factory = new MusicStoreContextFactory())
       {
-        var options = new DbContextOptionsBuilder<MusicStoreContext>()
-                .UseSqlite(connection)
-                .Options;
-
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           context.Database.EnsureCreated();
           var unitOfWork = new UnitOfWork(context, _mapper);
@@ -94,32 +77,22 @@ namespace MusicStore.Test.Repository
           await unitOfWork.Songs.AddAsync(song);
           await unitOfWork.SaveAsync();
         }
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           var song = context.Songs.Include(a => a.Album).First();
           Assert.NotNull(song.Album);
         }
-      }
-      finally
-      {
-        connection.Close();
       }
     }
 
     [Fact]
     public async Task Set_Genres_To_Song_Should_Persiste()
     {
-      var connection = new SqliteConnection("DataSource=:memory:");
-      connection.Open();
-      try
+      using (var factory = new MusicStoreContextFactory())
       {
-        var options = new DbContextOptionsBuilder<MusicStoreContext>()
-                .UseSqlite(connection)
-                .Options;
-
         var genresId = new List<int>();
         var songId = 0;
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           context.Database.EnsureCreated();
           var genres = new List<GenreEntity>
@@ -152,39 +125,27 @@ namespace MusicStore.Test.Repository
           genresId.Add(genres[1].Id);
           songId = song.Id;
         }
-
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           var unitOfWork = new UnitOfWork(context, _mapper);
           await unitOfWork.Songs.SetGenresToSongAsync(songId, genresId);
           await unitOfWork.SaveAsync();
         }
-
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           var song = context.Songs.Include(c => c.GenreSong).First();
           Assert.Equal(2, song.GenreSong.Count);
         }
-      }
-      finally
-      {
-        connection.Close();
       }
     }
 
     [Fact]
     public async Task Adding_Song_With_Invalid_AlbumId_Should_NOT_Persiste()
     {
-      var connection = new SqliteConnection("DataSource=:memory:");
-      var options = new DbContextOptionsBuilder<MusicStoreContext>()
-        .UseSqlite(connection)
-        .Options;
-      connection.Open();
-      try
+      using (var factory = new MusicStoreContextFactory())
       {
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
-          context.Database.EnsureCreated();
           var unitOfWork = new UnitOfWork(context, _mapper);
 
           var song = new SongForCreatingDto
@@ -193,40 +154,29 @@ namespace MusicStore.Test.Repository
             AlbumId = 1
           };
 
-          await unitOfWork.Songs.AddAsync(song);
-          await unitOfWork.SaveAsync();
+          try
+          {
+            await unitOfWork.Songs.AddAsync(song);
+            await unitOfWork.SaveAsync();
+          }
+          catch { }
         }
-      }
-      catch
-      {
-
-      }
-      finally
-      {
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           Assert.Null(context.Songs.FirstOrDefault());
         }
-        connection.Close();
       }
     }
 
     [Fact]
     public async Task Add_Existing_Song_ToExisting_Album_Should_Persisite()
     {
-      var connection = new SqliteConnection("DataSource=:memory:");
-      connection.Open();
-      try
+      using (var factory = new MusicStoreContextFactory())
       {
-        var options = new DbContextOptionsBuilder<MusicStoreContext>()
-              .UseSqlite(connection)
-              .Options;
         int songId = 0;
         int albumId = 0;
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
-          context.Database.EnsureCreated();
-
           var song = new SongEntity();
           var album = new AlbumEntity();
 
@@ -237,41 +187,28 @@ namespace MusicStore.Test.Repository
           songId = song.Id;
           albumId = album.Id;
         }
-
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           var unitOfWork = new UnitOfWork(context, _mapper);
           await unitOfWork.Songs.AddSongToAlbum(songId, albumId);
           await unitOfWork.SaveAsync();
         }
-
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           var song = context.Songs.Include(s => s.Album).First();
           Assert.NotNull(song.Album);
         }
-      }
-      finally
-      {
-        connection.Close();
       }
     }
 
     [Fact]
     public async Task Update_Song_Should_Persiste()
     {
-      var connection = new SqliteConnection("DataSource=:memory:");
-      connection.Open();
-      try
+      using (var factory = new MusicStoreContextFactory())
       {
-        var options = new DbContextOptionsBuilder<MusicStoreContext>()
-                .UseSqlite(connection)
-                .Options;
-        var songId = 0;
-        using (var context = new MusicStoreContext(options))
+        int songId = 0;
+        using (var context = factory.CreateMusicStoreContext())
         {
-          context.Database.EnsureCreated();
-
           var song = new SongEntity
           {
             Name = "First Song",
@@ -282,7 +219,7 @@ namespace MusicStore.Test.Repository
 
           songId = song.Id;
         }
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           var songForUpdateDto = new SongForUpdatingDto
           {
@@ -293,31 +230,22 @@ namespace MusicStore.Test.Repository
           await unitOfWork.Songs.UpdateAsync(songForUpdateDto);
           await unitOfWork.SaveAsync();
         }
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           var song = context.Songs.First();
           Assert.Equal("Updated", song.Name);
           Assert.Null(song.AlbumId);
         }
       }
-      finally
-      {
-        connection.Close();
-      }
     }
 
     [Fact]
     public async Task Delete_Song_Should_Persiste_Without_Deleting_The_Associated_Album()
     {
-      var connection = new SqliteConnection("DataSource=:memory:");
-      connection.Open();
-      try
+      using (var factory = new MusicStoreContextFactory())
       {
-        var options = new DbContextOptionsBuilder<MusicStoreContext>()
-                .UseSqlite(connection)
-                .Options;
         int songId = 0;
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           context.Database.EnsureCreated();
 
@@ -331,13 +259,13 @@ namespace MusicStore.Test.Repository
 
           songId = song.Id;
         }
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           var unitOfWork = new UnitOfWork(context, _mapper);
           await unitOfWork.Songs.DeleteAsync(songId);
           await unitOfWork.SaveAsync();
         }
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           var song = context.Songs.FirstOrDefault();
           var album = context.Albums.First();
@@ -345,24 +273,15 @@ namespace MusicStore.Test.Repository
           Assert.NotNull(album);
         }
       }
-      finally
-      {
-        connection.Close();
-      }
     }
 
     [Fact]
     public async Task Get_Song_Should_Include_Genres_And_Album()
     {
-      var connection = new SqliteConnection("DataSource=:memory:");
-      connection.Open();
-      try
+      using (var factory = new MusicStoreContextFactory())
       {
-        var options = new DbContextOptionsBuilder<MusicStoreContext>()
-              .UseSqlite(connection)
-              .Options;
         int songId = 0;
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           context.Database.EnsureCreated();
 
@@ -395,8 +314,7 @@ namespace MusicStore.Test.Repository
 
           songId = song.Id;
         }
-
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           var unitOfWork = new UnitOfWork(context, _mapper);
 
@@ -405,26 +323,15 @@ namespace MusicStore.Test.Repository
           Assert.Equal(2, song.Genres.Count);
         }
       }
-      finally
-      {
-        connection.Close();
-      }
     }
 
     [Fact]
     public async Task Get_Song_Page_Should_Not_Include_Album_Only_Include_Genere()
     {
-      var connection = new SqliteConnection("DataSource=:memory:");
-      connection.Open();
-      try
+      using (var factory = new MusicStoreContextFactory())
       {
-        var options = new DbContextOptionsBuilder<MusicStoreContext>()
-              .UseSqlite(connection)
-              .Options;
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
-          context.Database.EnsureCreated();
-
           var genres = new List<GenreEntity>
           {
             new GenreEntity{ Name = "1" },
@@ -462,8 +369,7 @@ namespace MusicStore.Test.Repository
           context.AddRange(genreSongs);
           context.SaveChanges();
         }
-
-        using (var context = new MusicStoreContext(options))
+        using (var context = factory.CreateMusicStoreContext())
         {
           var unitOfWork = new UnitOfWork(context, _mapper);
 
@@ -474,10 +380,6 @@ namespace MusicStore.Test.Repository
             Assert.Equal(2, song.Genres.Count);
           }
         }
-      }
-      finally
-      {
-        connection.Close();
       }
     }
   }

@@ -326,7 +326,7 @@ namespace MusicStore.Test.Repository
     }
 
     [Fact]
-    public async Task Get_Song_Page_Should_Not_Include_Album_Only_Include_Genere()
+    public async Task Get_Song_Page_Should_Include_Album_And_Include_Genere()
     {
       using (var factory = new MusicStoreContextFactory())
       {
@@ -376,7 +376,7 @@ namespace MusicStore.Test.Repository
           var songPage = await unitOfWork.Songs.GetSongPage();
           foreach (var song in songPage.TResult)
           {
-            Assert.Null(song.Album);
+            Assert.NotNull(song.Album);
             Assert.Equal(2, song.Genres.Count);
           }
         }

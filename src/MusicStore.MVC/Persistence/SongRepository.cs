@@ -41,6 +41,7 @@ namespace MusicStore.MVC.Persistence
       var songsQuery = context.Songs.Include(s => s.GenreSong)
         .Include(s => s.GenreSong)
           .ThenInclude(s => s.Genre)
+        .Include(s => s.Album)
         .AsTracking()
         .AsQueryable();
 

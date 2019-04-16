@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Album>
+@{
+  ViewData["Title"] = "Index";
+}
+
+<div class="alert alert-primary">
+  Albums List
+</div>
+<div class="container-fluid">
+  <table class="table table-responsive-sm">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var album in Model)
+      {
+        <tr>
+          <td>@album.Name</td>
+          <td>@album.Description</td>
+          <td>
+            <form asp-action="Delete" method="post" class="d-inline-block ml-2">
+              <input name="id" asp-for="@album.Id" type="hidden" />
+              <input type="submit" value="Delete" class="btn btn-sm btn-outline-danger" />
+            </form>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

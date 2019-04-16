@@ -2,13 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MusicStore.MVC.Persistence.Data;
+using MusicStore.MVC.Repository.Data;
+using MusicStore.MVC.Services;
 
 namespace MusicStore.MVC
 {
@@ -24,13 +29,15 @@ namespace MusicStore.MVC
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      services.Configure<CookiePolicyOptions>(options =>
-      {
-        // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-        options.CheckConsentNeeded = context => true;
-        options.MinimumSameSitePolicy = SameSiteMode.None;
-      });
+      var appSetting = Configuration.Get<AppSettings>();
 
+      services.Configure<AppSettings>(Configuration);
+      services.AddDbContext<MusicStoreContext>(options =>
+          options.UseSqlServer(appSetting.ConnectionStrings.DefaultConnection));
+
+      services.AddAutoMapper();
+
+      services.AddScoped<IUnitOfWork, UnitOfWork>();
 
       services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
     }
@@ -50,14 +57,14 @@ namespace MusicStore.MVC
       }
 
       app.UseHttpsRedirection();
+
       app.UseStaticFiles();
-      app.UseCookiePolicy();
 
       app.UseMvc(routes =>
       {
         routes.MapRoute(
-                  name: "default",
-                  template: "{controller=Home}/{action=Index}/{id?}");
+          name: "default",
+          template: "{controller=Home}/{action=Index}/{id?}");
       });
     }
   }

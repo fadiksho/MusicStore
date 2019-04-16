@@ -61,7 +61,6 @@ namespace MusicStore.Test.Repository
       {
         using (var context = factory.CreateMusicStoreContext())
         {
-          context.Database.EnsureCreated();
           var unitOfWork = new UnitOfWork(context, _mapper);
 
           var album = new AlbumEntity();
@@ -86,49 +85,37 @@ namespace MusicStore.Test.Repository
     }
 
     [Fact]
-    public async Task Set_Genres_To_Song_Should_Persiste()
+    public async Task Adding_Song_With_Genres_Should_Persiste()
     {
       using (var factory = new MusicStoreContextFactory())
       {
-        var genresId = new List<int>();
-        var songId = 0;
+        var genresIds = new List<int>();
         using (var context = factory.CreateMusicStoreContext())
         {
-          context.Database.EnsureCreated();
           var genres = new List<GenreEntity>
           {
-            new GenreEntity
-            {
-              Name = "Genre 1"
-            },
-            new GenreEntity
-            {
-              Name = "Genre 2"
-            }
+            new GenreEntity(),
+            new GenreEntity()
           };
           context.Genres.AddRange(genres);
-
-          var song = new SongEntity()
-          {
-            GenreSong = new List<GenreSongEntity>()
-            {
-              new GenreSongEntity
-              {
-                Genre = new GenreEntity()
-              }
-            }
-          };
-          context.Songs.Add(song);
           context.SaveChanges();
 
-          genresId.Add(genres[0].Id);
-          genresId.Add(genres[1].Id);
-          songId = song.Id;
+          genresIds.Add(genres[0].Id);
+          genresIds.Add(genres[1].Id);
         }
         using (var context = factory.CreateMusicStoreContext())
         {
           var unitOfWork = new UnitOfWork(context, _mapper);
-          await unitOfWork.Songs.SetGenresToSongAsync(songId, genresId);
+          var song = new SongForCreatingDto
+          {
+            Name = "First Song",
+            GenresIds = new List<int>
+            {
+              genresIds[0],
+              genresIds[1]
+            }
+          };
+          await unitOfWork.Songs.AddAsync(song);
           await unitOfWork.SaveAsync();
         }
         using (var context = factory.CreateMusicStoreContext())
@@ -235,6 +222,67 @@ namespace MusicStore.Test.Repository
           var song = context.Songs.First();
           Assert.Equal("Updated", song.Name);
           Assert.Null(song.AlbumId);
+        }
+      }
+    }
+
+    [Fact]
+    public async Task Update_Song_With_Genres_Should_Persiste()
+    {
+      using (var factory = new MusicStoreContextFactory())
+      {
+        var genresIds = new List<int>();
+        var songId = 0;
+        using (var context = factory.CreateMusicStoreContext())
+        {
+          var genres = new List<GenreEntity>
+          {
+            new GenreEntity(),
+            new GenreEntity(),
+            new GenreEntity()
+          };
+          context.Genres.AddRange(genres);
+          context.SaveChanges();
+          genresIds = genres.Select(s => s.Id).ToList();
+
+          var song = new SongEntity
+          {
+            Name = "First Song",
+            GenreSong = new List<GenreSongEntity>
+            {
+              new GenreSongEntity
+              {
+                GenreId = genresIds[0]
+              },
+              new GenreSongEntity
+              {
+                GenreId = genresIds[1]
+              }
+            }
+          };
+          context.Songs.Add(song);
+          context.SaveChanges();
+
+          songId = song.Id;
+        }
+        using (var context = factory.CreateMusicStoreContext())
+        {
+          var unitOfWork = new UnitOfWork(context, _mapper);
+          var songDto = new SongForUpdatingDto
+          {
+            Id = songId,
+            GenresIds = new List<int>
+            {
+              genresIds[2]
+            }
+          };
+          await unitOfWork.Songs.UpdateAsync(songDto);
+          await unitOfWork.SaveAsync();
+        }
+        using (var context = factory.CreateMusicStoreContext())
+        {
+          var song = context.Songs.Include(c => c.GenreSong).First();
+          Assert.Single(song.GenreSong);
         }
       }
     }

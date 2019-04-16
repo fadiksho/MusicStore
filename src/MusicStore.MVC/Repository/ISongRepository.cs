@@ -15,6 +15,5 @@ namespace MusicStore.MVC.Repository
     Task DeleteAsync(int songId);
 
     Task AddSongToAlbum(int songId, int? albumId);
-    Task SetGenresToSongAsync(int songId, IEnumerable<int> genresId);
   }
 }

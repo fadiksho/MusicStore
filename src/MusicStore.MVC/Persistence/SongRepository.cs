@@ -69,6 +69,7 @@ namespace MusicStore.MVC.Persistence
     public async Task UpdateAsync(SongForUpdatingDto dto)
     {
       var songEntity = await context.Songs
+        .Include(s => s.GenreSong)
         .FirstOrDefaultAsync(s => s.Id == dto.Id);
 
       mapper.Map(dto, songEntity);
@@ -87,29 +88,6 @@ namespace MusicStore.MVC.Persistence
         .FirstOrDefaultAsync(s => s.Id == songId);
 
       songEntity.AlbumId = albumId;
-    }
-
-    public async Task SetGenresToSongAsync(int songId, IEnumerable<int> genresId)
-    {
-      // Remove old genres from song
-      var song = await context.Songs.Include(s => s.GenreSong)
-       .FirstOrDefaultAsync(s => s.Id == songId);
-      if (song.GenreSong.Count > 0)
-        context.RemoveRange(song.GenreSong);
-
-      var genresToSong = new List<GenreSongEntity>();
-
-      foreach (var genreId in genresId)
-      {
-        var songGenres = new GenreSongEntity
-        {
-          SongId = songId,
-          GenreId = genreId
-        };
-        genresToSong.Add(songGenres);
-      }
-      if(genresToSong.Count > 0)
-        context.AddRange(genresToSong);
     }
   }
 }

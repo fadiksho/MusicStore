@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MusicStore.MVC.Dto;
 using MusicStore.MVC.Repository.Data;
 
 namespace MusicStore.MVC.Controllers
@@ -77,6 +78,39 @@ namespace MusicStore.MVC.Controllers
         logger.LogError(ex, "An error occurred while getting albums.");
       }
       return Json(null);
+    }
+
+    public IActionResult AddNewAlbum()
+    {
+      return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddNewAlbum(AlbumForCreatingDto dto)
+    {
+      try
+      {
+        if (!ModelState.IsValid)
+        {
+          return View(dto);
+        }
+
+        await unitOfWork.Albums.AddAsync(dto);
+
+        if (!await unitOfWork.SaveAsync())
+        {
+          // ToDo: Implement error page
+          return View("ErrorSaving");
+        }
+
+        return RedirectToAction(nameof(Index));
+      }
+      catch (Exception ex)
+      {
+        logger.LogError(ex, "An error occurred while deleting song.");
+      }
+      // ToDo: Implement error page
+      return View("ErrorSaving");
     }
   }
 }

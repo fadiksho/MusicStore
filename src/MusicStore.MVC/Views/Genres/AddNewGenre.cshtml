@@ -1,0 +1,25 @@
+﻿@model GenreForCreatingDto
+@{
+  ViewData["Title"] = "AddNew";
+}
+
+<div class="alert alert-success">
+  Adding New Genre
+</div>
+<div class="container-fluid">
+  <form asp-action="AddNewGenre">
+    <div class="form-group">
+      <label asp-for="Name">Genre Name *</label>
+      <input asp-for="Name"
+             class="form-control"
+             aria-describedby="genreName"
+             placeholder="Enter Genre Name">
+      <small class="text-danger">
+        <span asp-validation-for="Name"></span>
+      </small>
+    </div>
+    
+    <button type="submit" class="btn btn-success px-5">Save</button>
+    <a asp-action="Index" class="btn btn-danger px-5">Cancel</a>
+  </form>
+</div>

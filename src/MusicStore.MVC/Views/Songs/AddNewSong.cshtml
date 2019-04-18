@@ -1,0 +1,107 @@
+﻿@model CreateSongViewModel
+@{
+  ViewData["Title"] = "AddNew";
+}
+
+<div class="alert alert-success">
+  Adding New Song
+</div>
+<div class="container-fluid">
+  <form asp-action="AddNew" method="post">
+    <div class="form-group">
+      <label asp-for="Dto.Name">Name</label>
+      <input asp-for="Dto.Name" class="form-control" placeholder="Enter song name...">
+      <small class="text-danger">
+        <span asp-validation-for="Dto.Name"></span>
+      </small>
+    </div>
+    <div class="form-group">
+      <label asp-for="AlbumName">Album</label>
+      <input asp-for="AlbumName" id="albumNameSuggestion" autocomplete="off"
+             class="form-control"
+             placeholder="Select album Name...">
+      <ul class="list-group" id="albumNameSuggestion_list"></ul>
+      <label class="sr-only" for="albumId">Album</label>
+      <input asp-for="Dto.AlbumId" type="hidden" id="albumId" />
+    </div>
+    <span class="d-block mb-2">Genres for song</span>
+
+    <div class="form-group form-inline">
+      @for (int i = 0; i < Model.Genres.Count; i++)
+      {
+        <div class="custom-control custom-checkbox mb-3">
+          <input asp-for="Genres[i].IsSelected"
+                 class="custom-control-input" />
+          <input asp-for="Genres[i].Id" type="hidden" />
+          <input asp-for="Genres[i].Name" type="hidden" />
+          <label asp-for="Genres[i].IsSelected"
+                 class="custom-control-label mr-3">@Model.Genres[i].Name</label>
+              </div>
+            }
+    </div>
+    <button type="submit" class="btn btn-success px-5">Save</button>
+    <a href="#" class="btn btn-danger px-5">Cancel</a>
+  </form>
+</div>
+@section Scripts {
+  <script>
+    let $suggestionInput = $('#albumNameSuggestion');
+    let $suggestionTarget = $('#albumId');
+    let $suggestion_list = $('#albumNameSuggestion_list');
+    let suggestion_data = [];
+    $suggestionInput.on('input focus', delay(autoSuggestion, 500));
+    $suggestionInput.on('focusout', delay(function () {
+      $suggestion_list.hide('fast');
+      for (let i = 0; i < suggestion_data.length; i++) {
+        if (suggestion_data[i].name.toLowerCase() === $suggestionInput.val().toLowerCase()) {
+          $suggestionTarget.val(suggestion_data[i].id);
+          $suggestionInput.val(suggestion_data[i].name);
+          return;
+        }
+      }
+      $suggestionTarget.val('');
+      $suggestionInput.val('');
+    }, 100));
+
+    function autoSuggestion() {
+      $.get(
+        '@Url.Action("AlbumSuggestions", "Albums")',
+        {
+          search: $suggestionInput.val()
+        }).done(function (data) {
+          suggestion_data = data;
+          createSuggestions(suggestion_data, $suggestion_list);
+        });
+    }
+    function delay(callback, ms) {
+      let timer = 0;
+      return () => {
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+          callback();
+        }, ms || 0);
+      };
+    }
+    function createSuggestions(suggestion, $suggestion_list) {
+      if (suggestion) {
+        $suggestion_list.empty();
+        $suggestion_list.show();
+        if (suggestion.length === 1) {
+          $suggestionInput.val(suggestion[0].name);
+          $suggestion_list.hide('fast');
+        }
+        for (let i = 0; i < suggestion.length; i++) {
+          let element = $('<li>', {
+            id: `albumNameSuggestion_${i}`,
+            class: 'py-2 list-group-item list-group-item-action',
+            value: suggestion[i].id
+          }).text(suggestion[i].name)
+            .on('click', function (e) {
+              $suggestionInput.val(suggestion[i].name);
+            });
+          $suggestion_list.append(element)
+        }
+      }
+    }
+  </script>
+}

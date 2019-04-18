@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -52,6 +53,30 @@ namespace MusicStore.MVC.Controllers
       }
       // ToDo: Implement error page
       return View("ErrorSaving");
+    }
+
+    public async Task<IActionResult> AlbumSuggestions(string search)
+    {
+      // ToDo: Create a sql quary to filter album based album name
+      // This code is just to get thing done
+      // as the main focuse here is Identity
+      try
+      {
+        var albums = await unitOfWork.Albums.GetAllAsync();
+        var suggestions = albums.Select(s => new { s.Id, s.Name }).Take(10);
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+          suggestions = suggestions
+            .Where(s => s.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
+          return Json(suggestions);
+        }
+        return Json(suggestions);
+      }
+      catch (Exception ex)
+      {
+        logger.LogError(ex, "An error occurred while getting albums.");
+      }
+      return Json(null);
     }
   }
 }

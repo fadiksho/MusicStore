@@ -186,5 +186,52 @@ namespace MusicStore.Test.Repository
         }
       }
     }
+
+    [Fact]
+    public async Task Get_Album_Should_Include_Songs_And_Their_Genres()
+    {
+      using (var factory = new MusicStoreContextFactory())
+      {
+        var albumId = 0;
+        using (var context = factory.CreateMusicStoreContext())
+        {
+          var album = new AlbumEntity
+          {
+            Name = "Name",
+            Description = "Description"
+          };
+          context.Albums.Add(album);
+          context.SaveChanges();
+          albumId = album.Id;
+
+          var song = new SongEntity()
+          {
+            AlbumId = albumId,
+            GenreSong = new List<GenreSongEntity>()
+            {
+              new GenreSongEntity
+              {
+                Genre = new GenreEntity(),
+              },
+              new GenreSongEntity
+              {
+                Genre = new GenreEntity(),
+              }
+            }
+          };
+          context.Songs.Add(song);
+          context.SaveChanges();
+        }
+        using (var context = factory.CreateMusicStoreContext())
+        {
+          var unitOfWork = new UnitOfWork(context, _mapper);
+          var album = await unitOfWork.Albums.GetAsync(albumId);
+          Assert.NotNull(album);
+          Assert.Equal(2, album.Songs[0].Genres.Count);
+          Assert.NotNull(album.Songs[0].Genres[0]);
+          Assert.NotNull(album.Songs[0].Genres[1]);
+        }
+      }
+    }
   }
 }

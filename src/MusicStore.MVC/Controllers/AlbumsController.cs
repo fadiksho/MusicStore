@@ -112,5 +112,20 @@ namespace MusicStore.MVC.Controllers
       // ToDo: Implement error page
       return View("ErrorSaving");
     }
+
+    public async Task<IActionResult> Details(int id)
+    {
+      try
+      {
+        var album = await unitOfWork.Albums.GetAsync(id);
+        return View(album);
+      }
+      catch (Exception ex)
+      {
+        logger.LogError(ex, "An error occurred while getting albums.");
+      }
+      // ToDo: Implement error page
+      return View("Error");
+    }
   }
 }

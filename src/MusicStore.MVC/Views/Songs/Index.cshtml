@@ -24,7 +24,10 @@
           <td>
             @if (song.Album != null)
             {
-              @song.Album.Name
+            <a asp-controller="Albums"
+               asp-action="Details"
+               asp-route-id="@song.Album.Id"
+               >@song.Album.Name</a>
             }
             else
             {

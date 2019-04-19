@@ -19,7 +19,11 @@
       @foreach (var album in Model)
       {
         <tr>
-          <td>@album.Name</td>
+          <td>
+            <a asp-controller="Albums"
+               asp-action="Details"
+               asp-route-id="@album.Id">@album.Name</a>
+            </td>
           <td>@album.Description</td>
           <td>
             <form asp-action="Delete" method="post" class="d-inline-block ml-2">

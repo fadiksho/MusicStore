@@ -1,0 +1,28 @@
+﻿@model Album
+@{
+  ViewData["Title"] = "Details";
+}
+
+<div class="border shadow rounded-lg p-3">
+  <h1 class="font-weight-light text-primary">@Model.Name</h1>
+  <p class="lead">@Model.Description</p>
+  <hr class="my-4">
+  <h5 class="border-left border-info pl-2">Songs</h5>
+  <ul class="list-group">
+    @foreach (var song in Model.Songs)
+    {
+      <li class="list-group-item rounded border">
+        <h6 class="text-info mb-1">@song.Name</h6>
+        <small class="ml-2 font-weight-bold">Genres: </small>
+        @foreach (var genre in song.Genres)
+        {
+          <small class="font-italic">@genre.Name </small>
+        }
+        @if(song.Genres.Count < 1)
+        {
+          <small class="font-italic">none</small>
+        }
+      </li>
+    }
+  </ul>
+</div>

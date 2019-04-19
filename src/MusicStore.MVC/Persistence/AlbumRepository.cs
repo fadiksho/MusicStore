@@ -25,6 +25,8 @@ namespace MusicStore.MVC.Persistence
     {
       var albumEntity = await context.Albums
         .Include(a => a.Songs)
+          .ThenInclude(a => a.GenreSong)
+            .ThenInclude(a => a.Genre)
         .AsNoTracking()
         .FirstOrDefaultAsync(a => a.Id == albumId);
 

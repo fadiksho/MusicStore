@@ -48,6 +48,10 @@
             }
           </td>
           <td>
+            <a asp-action="Edit"
+               asp-route-id="@song.Id">
+              Edit
+            </a>
             <form asp-action="Delete" method="post" class="d-inline-block ml-2">
               <input name="id" asp-for="@song.Id" type="hidden"/>
               <input name="page" asp-for="@Model.CurrentPage" type="hidden"/>

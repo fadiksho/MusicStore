@@ -1,13 +1,21 @@
-﻿@model CreateSongViewModel
+﻿@model EditSongViewModel
 @{
-  ViewData["Title"] = "AddNew";
+  ViewData["Title"] = "Edit";
 }
 
-<div class="alert alert-success">
-  Adding New Song
+<div class="alert alert-primary">
+  Edit Song
 </div>
+@if (!String.IsNullOrWhiteSpace(Model.Message))
+{
+  <div class="alert alert-danger">
+    @Model.Message
+  </div>
+}
 <div class="container-fluid">
-  <form asp-action="AddNew" method="post">
+  <form asp-action="Edit"
+        asp-route-id="@Model.Dto.Id"
+        method="post">
     <div class="form-group">
       <label asp-for="Dto.Name">Name</label>
       <input asp-for="Dto.Name" class="form-control" placeholder="Enter song name...">
@@ -39,6 +47,9 @@
               </div>
             }
     </div>
+
+    <input asp-for="Dto.Id" type="hidden"/>
+
     <button type="submit" class="btn btn-success px-5">Save</button>
     <a asp-action="Index" class="btn btn-danger px-5">Cancel</a>
   </form>
@@ -55,11 +66,13 @@
       $suggestion_list.hide('fast');
       for (let i = 0; i < suggestion_data.length; i++) {
         if (suggestion_data[i].name.toLowerCase() === $suggestionInput.val().toLowerCase()) {
+
           $suggestionTarget.val(suggestion_data[i].id);
           $suggestionInput.val(suggestion_data[i].name);
           return;
         }
       }
+      console.log('test');
       $suggestionTarget.val('');
       $suggestionInput.val('');
     }, 100));

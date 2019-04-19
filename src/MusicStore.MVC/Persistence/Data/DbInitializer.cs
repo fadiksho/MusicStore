@@ -20,7 +20,11 @@ namespace MusicStore.MVC.Persistence.Data
       var albums = new List<AlbumEntity>();
       for (int i = 0; i < 3; i++)
       {
-        albums.Add(new AlbumEntity { Name = $"Album {i + 1}" });
+        albums.Add(new AlbumEntity
+        {
+          Name = $"Album {i + 1}",
+          Description = "description that the album will have just a doemo test"
+        });
       }
       // creating 15 songs
       var songs = new List<SongEntity>();
@@ -38,15 +42,7 @@ namespace MusicStore.MVC.Persistence.Data
       for (int i = 0; i < 10; i++)
       {
         genres.Add(new GenreEntity { Name = $"Genre {(char)i + 42}" });
-      }
-      // saving songs, genres and albums to db
-      logger.LogInformation("Adding Songs..");
-      context.Songs.AddRange(songs);
-      logger.LogInformation("Adding Genres..");
-      context.Genres.AddRange(genres);
-      logger.LogInformation("Saving..");
-      context.SaveChanges();
-      logger.LogInformation("Saving Succeseded");
+      }      
       // linking songs to genres
       var genresToSong = new List<GenreSongEntity>();
       var rand = new Random();
@@ -54,17 +50,19 @@ namespace MusicStore.MVC.Persistence.Data
       {
         // add random tags to song
         var randGenrsCount = rand.Next(0, 3);
-        for (int i = 0; i < randGenrsCount; i++)
+        for (int i = 0; i <= randGenrsCount - 1; i++)
         {
           genresToSong.Add(new GenreSongEntity
           {
-            SongId = song.Id,
-            GenreId = genres[rand.Next(genres.Count)].Id
+            Song = song,
+            Genre = genres[rand.Next(genres.Count)]
           });
         }
       }
       logger.LogInformation("Adding generes to songs..");
       context.AddRange(genresToSong);
+      // add song without album and genre
+      context.Songs.Add(new SongEntity { Name = "Without Genre and Album" });
       context.SaveChanges();
       logger.LogInformation("Saving Succeseded...");
     }

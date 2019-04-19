@@ -61,5 +61,17 @@ namespace MusicStore.MVC.Persistence
 
       context.Albums.Remove(albumEntity);
     }
+
+    public async Task<bool> Exist(int? albumId)
+    {
+      if (albumId == null)
+        return false;
+
+      var album = await context.Albums
+        .AsNoTracking()
+        .FirstOrDefaultAsync(s => s.Id == albumId);
+
+      return album != null;
+    }
   }
 }

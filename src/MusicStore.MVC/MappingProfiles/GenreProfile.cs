@@ -2,7 +2,7 @@
 using MusicStore.MVC.Dto;
 using MusicStore.MVC.Entities;
 using MusicStore.MVC.Models;
-using System.Linq;
+using MusicStore.MVC.ViewModels;
 
 namespace MusicStore.MVC.MappingProfiles
 {
@@ -13,6 +13,7 @@ namespace MusicStore.MVC.MappingProfiles
       CreateMap<GenreEntity, Genre>();
       CreateMap<GenreForCreatingDto, GenreEntity>();
       CreateMap<GenreForUpdatingDto, GenreEntity>();
+      CreateMap<Genre, CheckBoxItem>();
     }
   }
 }

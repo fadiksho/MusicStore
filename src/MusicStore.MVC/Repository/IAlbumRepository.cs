@@ -12,5 +12,7 @@ namespace MusicStore.MVC.Repository
     Task AddAsync(AlbumForCreatingDto dto);
     Task UpdateAsync(AlbumForUpdatingDto dto);
     Task DeleteAsync(int albumId);
+
+    Task<bool> Exist(int? albumId);
   }
 }

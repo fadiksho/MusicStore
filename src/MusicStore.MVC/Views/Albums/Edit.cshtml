@@ -1,0 +1,45 @@
+﻿@model EditAlbumViewModel
+@{
+  ViewData["Title"] = "AddNew";
+}
+
+<div class="alert alert-success">
+  Edit Album
+</div>
+@if (!String.IsNullOrWhiteSpace(Model.Message))
+{
+  <div class="alert alert-danger">
+    @Model.Message
+  </div>
+}
+<div class="container-fluid">
+  <form asp-action="Edit"
+        asp-route-id="@Model.Dto.Id">
+    <div class="form-group">
+      <label asp-for="Dto.Name">Album Name *</label>
+      <input asp-for="Dto.Name"
+             class="form-control"
+             aria-describedby="albumName"
+             placeholder="Enter Album Name">
+      <small class="text-danger">
+        <span asp-validation-for="Dto.Name"></span>
+      </small>
+    </div>
+    <div class="form-group">
+      <label asp-for="Dto.Description">Album Description</label>
+      <textarea asp-for="Dto.Description"
+                class="form-control"
+                aria-describedby="descriptionName"
+                placeholder="Enter Description Name">
+      </textarea>
+      <small class="text-danger">
+        <span asp-validation-for="Dto.Description"></span>
+      </small>
+    </div>
+
+    <input asp-for="Dto.Id" type="hidden" />
+
+    <button type="submit" class="btn btn-success px-5">Save</button>
+    <a asp-action="Index" class="btn btn-danger px-5">Cancel</a>
+  </form>
+</div>

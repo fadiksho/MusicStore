@@ -21,6 +21,14 @@ namespace MusicStore.MVC.Persistence
       this.mapper = mapper;
     }
 
+    public async Task<Genre> GetAsync(int id)
+    {
+      var genre = await context.Genres
+        .AsNoTracking()
+        .FirstOrDefaultAsync(g => g.Id == id);
+
+      return mapper.Map<Genre>(genre);
+    }
     public async Task<IEnumerable<Genre>> GetAllAsync()
     {
       var genreEntities = await context.Genres

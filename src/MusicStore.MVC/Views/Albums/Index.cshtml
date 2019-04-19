@@ -24,15 +24,17 @@
                asp-action="Details"
                asp-route-id="@album.Id">@album.Name</a>
             </td>
-          <td>@album.Description</td>
-          <td>
-            <form asp-action="Delete" method="post" class="d-inline-block ml-2">
-              <input name="id" asp-for="@album.Id" type="hidden" />
-              <input type="submit" value="Delete" class="btn btn-sm btn-outline-danger" />
-            </form>
-          </td>
-        </tr>
-      }
+            <td>@album.Description</td>
+            <td>
+              <a asp-action="Edit"
+                 asp-route-id="@album.Id">Edit</a>
+              <form asp-action="Delete" method="post" class="d-inline-block ml-2">
+                <input name="id" asp-for="@album.Id" type="hidden" />
+                <input type="submit" value="Delete" class="btn btn-sm btn-outline-danger" />
+              </form>
+            </td>
+          </tr>
+        }
     </tbody>
   </table>
 </div>

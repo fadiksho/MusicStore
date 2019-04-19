@@ -20,6 +20,8 @@
         <tr>
           <td>@genre.Name</td>
           <td>
+            <a asp-action="Edit"
+               asp-route-id="@genre.Id">Edit</a>
             <form asp-action="Delete" method="post" class="d-inline-block ml-2">
               <input name="id" asp-for="@genre.Id" type="hidden" />
               <input type="submit" value="Delete" class="btn btn-sm btn-outline-danger" />

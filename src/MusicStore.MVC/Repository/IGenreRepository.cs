@@ -7,6 +7,7 @@ namespace MusicStore.MVC.Repository
 {
   public interface IGenreRepository
   {
+    Task<Genre> GetAsync(int id);
     Task<IEnumerable<Genre>> GetAllAsync();
     Task AddAsync(GenreForCreatingDto dto);
     Task UpdateAsync(GenreForUpdatingDto dto);

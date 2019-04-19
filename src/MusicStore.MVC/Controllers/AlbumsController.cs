@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MusicStore.MVC.Dto;
 using MusicStore.MVC.Repository.Data;
+using MusicStore.MVC.ViewModels;
 
 namespace MusicStore.MVC.Controllers
 {
@@ -12,11 +14,15 @@ namespace MusicStore.MVC.Controllers
   {
     private readonly IUnitOfWork unitOfWork;
     private readonly ILogger logger;
+    private readonly IMapper mapper;
 
-    public AlbumsController(IUnitOfWork unitOfWork, ILogger<AlbumsController> logger)
+    public AlbumsController(IUnitOfWork unitOfWork, 
+      ILogger<AlbumsController> logger,
+      IMapper mapper)
     {
       this.unitOfWork = unitOfWork;
       this.logger = logger;
+      this.mapper = mapper;
     }
     public async Task<IActionResult> Index()
     {
@@ -126,6 +132,60 @@ namespace MusicStore.MVC.Controllers
       }
       // ToDo: Implement error page
       return View("Error");
+    }
+
+    public async Task<IActionResult> Edit(int id)
+    {
+      try
+      {
+        var album = await unitOfWork.Albums.GetAsync(id);
+        var dto = mapper.Map<AlbumForUpdatingDto>(album);
+        var vm = new EditAlbumViewModel
+        {
+          Dto = dto
+        };
+        return View(vm);
+      }
+      catch (Exception ex)
+      {
+        logger.LogError(ex, "An error occurred while getting albums.");
+      }
+      // ToDo: Implement error page
+      return View("Error");
+    }
+
+    [HttpPost]
+    [AutoValidateAntiforgeryToken]
+    public async Task<IActionResult> Edit(int id, EditAlbumViewModel vm)
+    {
+      try
+      {
+        if (!ModelState.IsValid)
+          return View(vm);
+
+        if (id != vm.Dto.Id)
+        {
+          vm.Message = "Opps update failed please try again";
+          return View(vm);
+        }
+
+        await unitOfWork.Albums.UpdateAsync(vm.Dto);
+
+        if (!await unitOfWork.SaveAsync())
+        {
+          // ToDo: Implement error page and logging
+          vm.Message = "Update Album Fail";
+          return View(vm);
+        }
+
+        return RedirectToAction(nameof(Details), new { id });
+      }
+      catch (Exception ex)
+      {
+        logger.LogError(ex, "An error occurred while deleting song.");
+      }
+      // ToDo: Implement error page
+      return View("ErrorSaving");
     }
   }
 }

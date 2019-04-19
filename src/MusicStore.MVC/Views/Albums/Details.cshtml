@@ -4,7 +4,12 @@
 }
 
 <div class="border shadow rounded-lg p-3">
-  <h1 class="font-weight-light text-primary">@Model.Name</h1>
+  <div class="d-flex">
+    <h1 class="font-weight-light text-primary mr-auto">@Model.Name</h1>
+    <a asp-action="Edit"
+       asp-route-id="@Model.Id">Edit</a>
+  </div>
+  
   <p class="lead">@Model.Description</p>
   <hr class="my-4">
   <h5 class="border-left border-info pl-2">Songs</h5>

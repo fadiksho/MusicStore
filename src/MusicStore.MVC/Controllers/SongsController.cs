@@ -180,6 +180,12 @@ namespace MusicStore.MVC.Controllers
 
         await unitOfWork.Songs.UpdateAsync(vm.Dto);
 
+        if (!await unitOfWork.SaveAsync())
+        {
+          // ToDo: Implement error page
+          return View("ErrorSaving");
+        }
+
         return RedirectToAction(nameof(Index));
       }
       catch (Exception ex)

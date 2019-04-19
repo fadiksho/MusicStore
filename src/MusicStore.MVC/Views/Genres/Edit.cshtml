@@ -1,0 +1,34 @@
+﻿@model EditGenreViewModel
+@{
+  ViewData["Title"] = "Edit";
+}
+
+<div class="alert alert-success">
+  Edit Genre
+</div>
+@if (!String.IsNullOrWhiteSpace(Model.Message))
+{
+  <div class="alert alert-danger">
+    @Model.Message
+  </div>
+}
+<div class="container-fluid">
+  <form asp-action="Edit"
+        asp-route-id="@Model.Dto.Id">
+    <div class="form-group">
+      <label asp-for="Dto.Name">Genre Name *</label>
+      <input asp-for="Dto.Name"
+             class="form-control"
+             aria-describedby="genreName"
+             placeholder="Enter Genre Name">
+      <small class="text-danger">
+        <span asp-validation-for="Dto.Name"></span>
+      </small>
+    </div>
+
+    <input asp-for="@Model.Dto.Id" type="hidden" />
+
+    <button type="submit" class="btn btn-success px-5">Save</button>
+    <a asp-action="Index" class="btn btn-danger px-5">Cancel</a>
+  </form>
+</div>

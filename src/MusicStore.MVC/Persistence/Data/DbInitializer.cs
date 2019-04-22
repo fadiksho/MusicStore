@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MusicStore.MVC.Entities;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace MusicStore.MVC.Persistence.Data
   {
     public static void Initialize(MusicStoreContext context, ILogger<Program> logger)
     {
-      context.Database.EnsureCreated();
+      context.Database.Migrate();
 
       if (context.Songs.Any())
         return;

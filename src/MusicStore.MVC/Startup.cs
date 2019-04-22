@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MusicStore.MVC.Models;
 using MusicStore.MVC.Persistence.Data;
 using MusicStore.MVC.Repository.Data;
 using MusicStore.MVC.Services;
+using System;
 
 namespace MusicStore.MVC
 {
@@ -28,6 +31,43 @@ namespace MusicStore.MVC
       services.Configure<AppSettings>(Configuration);
       services.AddDbContext<MusicStoreContext>(options =>
           options.UseSqlServer(appSetting.ConnectionStrings.DefaultConnection));
+
+      services.AddIdentity<User, IdentityRole>()
+        .AddEntityFrameworkStores<MusicStoreContext>()
+        .AddDefaultTokenProviders();
+      services.Configure<IdentityOptions>(options =>
+      {
+        options.Password.RequireDigit = true;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireNonAlphanumeric = true;
+        options.Password.RequireUppercase = true;
+        options.Password.RequiredLength = 8;
+        options.Password.RequiredUniqueChars = 1;
+        
+        // Lockout settings.
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+        options.Lockout.MaxFailedAccessAttempts = 5;
+        options.Lockout.AllowedForNewUsers = true;
+
+        // User settings.
+        options.User.AllowedUserNameCharacters =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+        options.User.RequireUniqueEmail = true;
+      });
+      services.Configure<PasswordHasherOptions>(option =>
+      {
+        option.IterationCount = 15000;
+      });
+      services.ConfigureApplicationCookie(options =>
+      {
+        // Cookie settings
+        options.Cookie.HttpOnly = true;
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+        options.LoginPath = "/Account/Login";
+        options.AccessDeniedPath = "/User/AccessDenied";
+        options.SlidingExpiration = true;
+      });
 
       services.AddAutoMapper();
 
@@ -53,6 +93,8 @@ namespace MusicStore.MVC
       app.UseHttpsRedirection();
 
       app.UseStaticFiles();
+
+      app.UseAuthentication();
 
       app.UseMvc(routes =>
       {

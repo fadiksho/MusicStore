@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MusicStore.MVC.Persistence.Data;
 
 namespace MusicStore.MVC.Migrations
 {
   [DbContext(typeof(MusicStoreContext))]
-  partial class MusicStoreContextModelSnapshot : ModelSnapshot
+  [Migration("20190422165639_Adding_Identity_Tables")]
+  partial class Adding_Identity_Tables
   {
-    protected override void BuildModel(ModelBuilder modelBuilder)
+    protected override void BuildTargetModel(ModelBuilder modelBuilder)
     {
 #pragma warning disable 612, 618
       modelBuilder

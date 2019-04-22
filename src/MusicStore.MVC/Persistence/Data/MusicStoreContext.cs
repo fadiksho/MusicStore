@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MusicStore.MVC.Entities;
+using MusicStore.MVC.Models;
 
 namespace MusicStore.MVC.Persistence.Data
 {
-  public class MusicStoreContext : DbContext
+  public class MusicStoreContext : IdentityDbContext<User>
   {
     public MusicStoreContext(DbContextOptions<MusicStoreContext> options)
       : base(options) { }

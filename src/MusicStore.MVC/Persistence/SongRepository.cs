@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using MusicStore.MVC.Abstraction.Pagination;
 using MusicStore.MVC.Dto;
 using MusicStore.MVC.Entities;
-using MusicStore.MVC.Extensions;
+using MusicStore.MVC.Extend.Extensions;
 using MusicStore.MVC.Models;
 using MusicStore.MVC.Persistence.Data;
 using MusicStore.MVC.Repository;

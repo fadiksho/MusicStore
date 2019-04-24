@@ -1,0 +1,54 @@
+﻿@model LogInViewModel
+@{
+  ViewData["Title"] = "Login";
+  var returnUrl = Context.Request.Query["ReturnUrl"];
+}
+
+<div class="alert alert-success">
+  SignIn
+</div>
+@if (Model != null && !String.IsNullOrEmpty(Model.Message))
+{
+  <div class="alert alert-danger">
+    @Model.Message
+  </div>
+}
+
+<form asp-action="LogIn"
+      asp-route-returnUrl="@returnUrl"
+      method="post">
+  <div class="form-group">
+    <label asp-for="Email"></label>
+    <input asp-for="Email"
+           placeholder="Enter Email Address"
+           class="form-control">
+    <span class="text-danger" asp-validation-for="Email"></span>
+  </div>
+  <div class="form-group">
+    <label asp-for="Password"></label>
+    <input asp-for="Password"
+           placeholder="Enter Password"
+           class="form-control">
+    <span class="text-danger" asp-validation-for="Password"></span>
+  </div>
+  <div class="form-group ">
+    <div class="custom-control custom-checkbox d-flex">
+      <input asp-for="RememberMe" class="custom-control-input">
+      <label asp-for="RememberMe" class="custom-control-label">Remember Me</label>
+      <div class="ml-auto">
+        <a asp-controller="Accounts"
+           asp-action="ForgetPassword"
+           class="d-block">
+          Forget your Password?
+        </a>
+        <a asp-controller="Accounts"
+           asp-action="Register"
+           class="d-block">
+          Create new account!
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary px-5">Submit</button>
+</form>

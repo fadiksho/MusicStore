@@ -51,7 +51,7 @@ namespace MusicStore.MVC
 
         // User settings.
         options.User.AllowedUserNameCharacters =
-        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_";
         options.User.RequireUniqueEmail = true;
       });
       services.Configure<PasswordHasherOptions>(option =>
@@ -64,7 +64,7 @@ namespace MusicStore.MVC
         options.Cookie.HttpOnly = true;
         options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
 
-        options.LoginPath = "/Account/Login";
+        options.LoginPath = "/Accounts/Login";
         options.AccessDeniedPath = "/User/AccessDenied";
         options.SlidingExpiration = true;
       });
@@ -98,6 +98,11 @@ namespace MusicStore.MVC
 
       app.UseMvc(routes =>
       {
+        routes.MapRoute(
+          name: "Users/{username}",
+          "Profile/{username}",
+          new { controller = "Users", action = "Profile", username = "" });
+
         routes.MapRoute(
           name: "default",
           template: "{controller=Songs}/{action=Index}/{id?}");

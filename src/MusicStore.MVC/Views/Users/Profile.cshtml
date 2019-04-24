@@ -1,0 +1,19 @@
+﻿@model User
+@{
+  ViewData["Title"] = "Profile";
+}
+
+<h1 class="display-4">@Model.UserName Profile</h1>
+
+<table class="table mt-4">
+  <tbody>
+    <tr>
+      <td class="font-weight-bold">Username: </td>
+      <td>@Model.UserName</td>
+    </tr>
+    <tr>
+      <td class="font-weight-bold">E-mail: </td>
+      <td>@Model.Email</td>
+    </tr>
+  </tbody>
+</table>

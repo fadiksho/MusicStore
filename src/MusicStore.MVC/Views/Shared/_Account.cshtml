@@ -1,0 +1,43 @@
+﻿<ul class="navbar-nav">
+  @if (User.Identity.IsAuthenticated)
+  {
+  <li class="nav-item dropdown mr-auto">
+    <a class="nav-link dropdown-toggle"
+       href="#"
+       id="accountDropdown"
+       role="button"
+       data-toggle="dropdown"
+       aria-haspopup="true"
+       aria-expanded="false">
+      @User.Identity.Name
+    </a>
+    <div class="dropdown-menu" aria-labelledby="accountDropdown">
+      <a asp-controller="Users"
+         asp-action="Profile"
+         asp-route-username="@User.Identity.Name"
+         class="dropdown-item">My Profile</a>
+      <div class="dropdown-divider"></div>
+      <form asp-controller="Accounts"
+            asp-action="Logout">
+        <button type="submit"
+                class="dropdown-item">
+          Logout
+        </button>
+      </form>
+    </div>
+  </li>
+    }
+    else
+    {
+      <li class="nav-item">
+        <a class="nav-link text-dark"
+           asp-controller="Accounts"
+           asp-action="Register">Register</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-dark"
+           asp-controller="Accounts"
+           asp-action="LogIn">LogIn</a>
+      </li>
+    }
+</ul>

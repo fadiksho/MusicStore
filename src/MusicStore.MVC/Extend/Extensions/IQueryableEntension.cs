@@ -1,7 +1,7 @@
 ﻿using MusicStore.MVC.Abstraction.Pagination;
 using System.Linq;
 
-namespace MusicStore.MVC.Extensions
+namespace MusicStore.MVC.Extend.Extensions
 {
   public static class IQueryableEntension
   {

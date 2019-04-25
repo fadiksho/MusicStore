@@ -1,24 +1,19 @@
-﻿<ul class="navbar-nav">
-  @if (User.Identity.IsAuthenticated)
-  {
-  <li class="nav-item dropdown mr-auto">
-    <a class="nav-link dropdown-toggle"
-       href="#"
-       id="accountDropdown"
-       role="button"
-       data-toggle="dropdown"
-       aria-haspopup="true"
-       aria-expanded="false">
-      @User.Identity.Name
-    </a>
-    <div class="dropdown-menu" aria-labelledby="accountDropdown">
+﻿@if (User.Identity.IsAuthenticated)
+{
+  <li class="nav-item dropdown">
+    <button type="button"
+        class="btn btn-block text-left btn-outline-primary dropdown-toggle rounded-0 border-top-0 border-left-0 border-right-0"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false">@User.Identity.Name</button>
+    <div class="dropdown-menu dropdown-menu-md-right" aria-labelledby="accountDropdown">
       <a asp-controller="Users"
-         asp-action="Profile"
-         asp-route-username="@User.Identity.Name"
-         class="dropdown-item">My Profile</a>
+          asp-action="Profile"
+          asp-route-username="@User.Identity.Name"
+          class="dropdown-item">My Profile</a>
       <div class="dropdown-divider"></div>
       <form asp-controller="Accounts"
-            asp-action="Logout">
+                  asp-action="Logout">
         <button type="submit"
                 class="dropdown-item">
           Logout
@@ -26,18 +21,17 @@
       </form>
     </div>
   </li>
-    }
-    else
-    {
-      <li class="nav-item">
-        <a class="nav-link text-dark"
-           asp-controller="Accounts"
-           asp-action="Register">Register</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link text-dark"
-           asp-controller="Accounts"
-           asp-action="LogIn">LogIn</a>
-      </li>
-    }
-</ul>
+}
+else
+{
+  <li class="nav-item">
+    <a class="nav-link text-dark"
+        asp-controller="Accounts"
+        asp-action="Register">Register</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link text-dark"
+        asp-controller="Accounts"
+        asp-action="LogIn">LogIn</a>
+  </li>
+}

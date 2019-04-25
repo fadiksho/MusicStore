@@ -338,3 +338,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+src/MusicStore.MVC/appsettings.Development.json
+.vscode/launch.json
+.vscode/tasks.json

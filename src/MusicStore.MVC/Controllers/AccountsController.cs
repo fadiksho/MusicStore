@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using MusicStore.MVC.Models;
 using MusicStore.MVC.ViewModels;
 using System;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 namespace MusicStore.MVC.Controllers
@@ -13,13 +15,16 @@ namespace MusicStore.MVC.Controllers
   {
     private readonly UserManager<User> userManager;
     private readonly SignInManager<User> signInManager;
+    private readonly IEmailSender emailSender;
 
     public AccountsController(
       UserManager<User> userManager,
-      SignInManager<User> signInManager)
+      SignInManager<User> signInManager,
+      IEmailSender emailSender)
     {
       this.userManager = userManager;
       this.signInManager = signInManager;
+      this.emailSender = emailSender;
     }
 
     [AllowAnonymous]
@@ -31,50 +36,33 @@ namespace MusicStore.MVC.Controllers
     [HttpPost, AutoValidateAntiforgeryToken]
     public async Task<IActionResult> Register(RegisterViewModel vm)
     {
-      try
+      if (ModelState.IsValid)
       {
-        if (!ModelState.IsValid)
+        var user = new User
         {
-          return View(vm);
-        }
-       // check if Username is available
-       var isUsernameAvailable = (await userManager.FindByNameAsync(vm.UserName) == null);
-        if (!isUsernameAvailable)
-        {
-          vm.Message = $"Username '{vm.UserName}' is already taken.";
-          return View(vm);
-        }
-        // check if Email is available
-        var isEmailAvailable = (await userManager.FindByEmailAsync(vm.UserName) == null);
-        if (!isEmailAvailable)
-        {
-          vm.Message = $"Email '{vm.Email}' is already taken.";
-          return View(vm);
-        }
-
+          UserName = vm.UserName,
+          Email = vm.Email
+        };
         var result = await userManager.CreateAsync(
-          new User
-          {
-            UserName = vm.UserName,
-            Email = vm.Email
-          },
+          user,
           vm.Password
         );
 
         if (result.Succeeded)
         {
-          return View("LogIn", new LogInViewModel
-          {
-            Email = vm.Email,
-          });
+          // send the confirmation to link to user email
+          await sendConfirmationLinkAsync(user);
+
+          // await signInManager.SignInAsync(user, isPersistent: false);
+          return RedirectToAction("Index", "Songs");
         }
-        vm.Message = "An error happened while creating your account try again.";
-        return View(vm);
+        foreach (var error in result.Errors)
+        {
+          ModelState.AddModelError(string.Empty, error.Description);
+        }
       }
-      catch
-      {
-        throw new NotImplementedException();
-      }
+      // If we got this far, something failed, redisplay form
+      return View();
     }
 
     [AllowAnonymous]
@@ -91,6 +79,16 @@ namespace MusicStore.MVC.Controllers
         var user = await userManager.FindByEmailAsync(vm.Email);
         if (user != null)
         {
+          // check if user Email is confirmed
+          if (!user.EmailConfirmed)
+          {
+            var emailConfirmationVM = new EmailConfirmationViewModel
+            {
+              Email = user.Email,
+              UserName = user.UserName
+            };
+            return View("EmailConfirmationResend", emailConfirmationVM);
+          }
           var result = await signInManager.PasswordSignInAsync(user.UserName,
             vm.Password, vm.RememberMe, lockoutOnFailure: false);
           if (result.Succeeded)
@@ -130,6 +128,66 @@ namespace MusicStore.MVC.Controllers
       {
         throw new NotImplementedException();
       }
+    }
+
+    [AllowAnonymous]
+    public async Task<IActionResult> ConfirmEmail(string userId, string code)
+    {
+      if (userId == null || code == null)
+      {
+        return RedirectToAction("Index", "Songs");
+      }
+
+      var user = await userManager.FindByIdAsync(userId);
+      if (user == null)
+      {
+        return NotFound($"Unable to load user with ID '{userId}'.");
+      }
+
+      var result = await userManager.ConfirmEmailAsync(user, code);
+      if (!result.Succeeded)
+      {
+        throw new InvalidOperationException($"Error confirming email for user with ID '{userId}':");
+      }
+
+      await signInManager.SignInAsync(user, isPersistent: false);
+
+      return RedirectToAction("Index", "Songs");
+    }
+
+    [AllowAnonymous]
+    public async Task<IActionResult> EmailConfirmationResend()
+    {
+      var user = await userManager.FindByEmailAsync("fadiksho@gmail.com");
+      return View(user);
+    }
+    [AllowAnonymous]
+    [HttpPost, AutoValidateAntiforgeryToken]
+    public async Task<IActionResult> EmailConfirmationResend(EmailConfirmationViewModel vm)
+    {
+      var user = await userManager.FindByEmailAsync(vm.Email);
+      if (user != null)
+      {
+        if (!user.EmailConfirmed)
+        {
+          await sendConfirmationLinkAsync(user);
+        }
+
+        vm.IsConfirmationLinkSent = true;
+        return View(vm);
+      }
+      vm.Message = $"The Email {vm.Email} is not exist.";
+      return View(vm);
+    }
+    private async Task sendConfirmationLinkAsync(User user)
+    {
+      var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+      var callbackUrl = Url.Action("ConfirmEmail", "Accounts",
+       new { userId = user.Id, code = code },
+       Request.Scheme);
+
+      await emailSender.SendEmailAsync(user.Email, "Confirm your email",
+         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
     }
   }
 }

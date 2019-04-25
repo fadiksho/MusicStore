@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -32,6 +33,8 @@ namespace MusicStore.MVC
       services.AddDbContext<MusicStoreContext>(options =>
           options.UseSqlServer(appSetting.ConnectionStrings.DefaultConnection));
 
+      services.AddTransient<IEmailSender, DemoEmailSender>();
+
       services.AddIdentity<User, IdentityRole>()
         .AddEntityFrameworkStores<MusicStoreContext>()
         .AddDefaultTokenProviders();
@@ -48,7 +51,7 @@ namespace MusicStore.MVC
         options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
         options.Lockout.MaxFailedAccessAttempts = 5;
         options.Lockout.AllowedForNewUsers = true;
-
+        options.SignIn.RequireConfirmedEmail = true;
         // User settings.
         options.User.AllowedUserNameCharacters =
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_";

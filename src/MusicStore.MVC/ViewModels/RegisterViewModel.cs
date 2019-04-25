@@ -24,7 +24,6 @@ namespace MusicStore.MVC.ViewModels
     [StringLength(80, MinimumLength = 8, ErrorMessage = "Password must be 8 long and maximum 80 long.")]
     public string Password { get; set; }
 
-    [Required]
     [Display(Name = "Confirm Password")]
     [DataType(DataType.Password)]
     [Compare("Password")]

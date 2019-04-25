@@ -1,0 +1,37 @@
+@model EmailConfirmationViewModel
+@{
+  ViewData["Title"] = "Confirm Email";
+}
+<div class="jumbotron">
+  <h1 class="display-4">Hello, @Model.UserName!</h1>
+  <p class="lead">Your Email <span class="font-weight-bold text-muted">@Model.Email</span> need to be confirm to login.</p>
+  <hr class="my-4">
+  <p>
+    If your want to confirm your email we will send you a confirmation link to your Email, if this is not your Email
+     <a asp-controller="Accounts"
+        asp-action="Register"
+        class="text-primary">Create new Account</a>
+  </p>
+  <div>
+    @if(!Model.IsConfirmationLinkSent)
+    {
+      <form asp-controller="Accounts" 
+          asp-action="EmailConfirmationResend"
+          class="d-inline-block">
+      <input asp-for="UserName" type="hidden" />
+      <input asp-for="Email" type="hidden" />
+      <button type="submit"
+              class="btn btn-success text-white" 
+              role="button">Confirm My Email</button>
+    </form>
+    
+    <a class="btn btn-danger text-white ml-1" role="button">Delete Account</a>
+    }
+    else
+    {
+      <div class="alert alert-success">
+        confirmation link have been sent to <span class="font-weight-bold text-muted">@Model.Email</span>, Please Check Your Email
+      </div>
+    }
+  </div>
+</div>

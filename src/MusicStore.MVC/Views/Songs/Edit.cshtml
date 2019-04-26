@@ -57,6 +57,8 @@
 @section Scripts {
   <script>
     // ToDo DRY Convert this script to be Independent so it can be reuse
+    // ToDo knowing bug when submiting the form before the focusout event trigger
+    // the albumId value will not be set
     let $suggestionInput = $('#albumNameSuggestion');
     let $suggestionTarget = $('#albumId');
     let $suggestion_list = $('#albumNameSuggestion_list');

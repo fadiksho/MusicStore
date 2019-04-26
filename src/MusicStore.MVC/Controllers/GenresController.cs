@@ -78,7 +78,7 @@ namespace MusicStore.MVC.Controllers
 
         await unitOfWork.Genres.AddAsync(dto);
 
-        if(!await unitOfWork.SaveAsync())
+        if (!await unitOfWork.SaveAsync())
         {
           // ToDo: Implement error page
           return View("ErrorSaving");
@@ -130,12 +130,7 @@ namespace MusicStore.MVC.Controllers
         }
 
         await unitOfWork.Genres.UpdateAsync(vm.Dto);
-
-        if (!await unitOfWork.SaveAsync())
-        {
-          // ToDo: Implement error page
-          return View("ErrorSaving");
-        }
+        await unitOfWork.SaveAsync();
 
         return RedirectToAction(nameof(Index));
       }

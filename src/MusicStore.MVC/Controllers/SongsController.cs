@@ -179,13 +179,8 @@ namespace MusicStore.MVC.Controllers
         vm.Dto.GenresIds = await GetValidGenresIdsAsync(selectedGenres);
 
         await unitOfWork.Songs.UpdateAsync(vm.Dto);
-
-        if (!await unitOfWork.SaveAsync())
-        {
-          // ToDo: Implement error page
-          return View("ErrorSaving");
-        }
-
+        await unitOfWork.SaveAsync();
+        
         return RedirectToAction(nameof(Index));
       }
       catch (Exception ex)

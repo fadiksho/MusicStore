@@ -16,7 +16,7 @@ namespace MusicStore.MVC.Controllers
     private readonly ILogger logger;
     private readonly IMapper mapper;
 
-    public AlbumsController(IUnitOfWork unitOfWork, 
+    public AlbumsController(IUnitOfWork unitOfWork,
       ILogger<AlbumsController> logger,
       IMapper mapper)
     {
@@ -170,14 +170,8 @@ namespace MusicStore.MVC.Controllers
         }
 
         await unitOfWork.Albums.UpdateAsync(vm.Dto);
-
-        if (!await unitOfWork.SaveAsync())
-        {
-          // ToDo: Implement error page and logging
-          vm.Message = "Update Album Fail";
-          return View(vm);
-        }
-
+        await unitOfWork.SaveAsync();
+        
         return RedirectToAction(nameof(Details), new { id });
       }
       catch (Exception ex)

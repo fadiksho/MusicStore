@@ -1,0 +1,39 @@
+@model IEnumerable<User>
+
+@{
+  ViewData["Title"] = "Manage Users";
+}
+
+<div class="alert alert-primary">
+  Users List
+</div>
+<div class="container-fluid">
+  <table class="table table-responsive-sm">
+    <thead>
+      <tr>
+        <th scope="col">User Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var user in Model)
+      {
+        <tr>
+          <td>@user.UserName</td>
+          <td>@user.Email</td>
+          <td>
+            <a asp-action="Edit"
+               asp-route-id="@user.Id">
+              Edit
+            </a>
+            <form asp-action="Delete" method="post" class="d-inline-block ml-2">
+              <input name="id" asp-for="@user.Id" type="hidden" />
+              <button type="submit" value="Delete" class="btn btn-sm btn-outline-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

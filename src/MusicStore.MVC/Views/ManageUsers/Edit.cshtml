@@ -1,0 +1,42 @@
+﻿@model EditUserViewModel
+@{
+  ViewData["Title"] = "Edit";
+}
+
+<div class="alert alert-primary">
+  Edit <span class="text-muted ml-2">@Model.UserName, @Model.Email</span>
+</div>
+@if (!String.IsNullOrWhiteSpace(Model.Message))
+{
+  <div class="alert alert-danger">
+    @Model.Message
+  </div>
+}
+<div class="container-fluid">
+  <form asp-action="Edit"
+        asp-route-id="@Model.UserId"
+        method="post">
+
+    <span class="d-block mb-2">Roles</span>
+
+    <div class="form-group form-inline">
+      @for (int i = 0; i < Model.UserRoles.Count; i++)
+      {
+        <div class="custom-control custom-checkbox mb-3">
+          <input asp-for="UserRoles[i].IsSelected"
+                 class="custom-control-input" />
+          <input asp-for="UserRoles[i].Id" type="hidden" />
+          <input asp-for="UserRoles[i].Name" type="hidden" />
+          <label asp-for="UserRoles[i].IsSelected"
+                 class="custom-control-label mr-3">@Model.UserRoles[i].Name</label>
+        </div>
+      }
+    </div>
+
+    <input asp-for="@Model.UserId" type="hidden" />
+    <input asp-for="@Model.Email" type="hidden" />
+    <input asp-for="@Model.UserName" type="hidden" />
+    <button type="submit" class="btn btn-success px-5">Save</button>
+    <a asp-action="Index" class="btn btn-danger px-5">Cancel</a>
+  </form>
+</div>

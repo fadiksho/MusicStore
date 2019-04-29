@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MusicStore.MVC.Dto;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace MusicStore.MVC.Controllers
 {
+  [Authorize]
   public class GenresController : Controller
   {
     private readonly IUnitOfWork unitOfWork;
@@ -23,6 +25,7 @@ namespace MusicStore.MVC.Controllers
       this.logger = logger;
       this.mapper = mapper;
     }
+    [Authorize]
     public async Task<IActionResult> Index()
     {
       try

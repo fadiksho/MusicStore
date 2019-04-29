@@ -8,7 +8,7 @@ namespace MusicStore.MVC.Services
   public class AppSettings
   {
     public ConnectionStrings ConnectionStrings { get; set; }
-    public EmailSenderOptions AuthMessageSenderOptions { get; set; }
+    public EmailSenderOptions EmailSenderOptions { get; set; }
   }
 
   public class ConnectionStrings

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MusicStore.MVC.Dto;
@@ -10,6 +11,7 @@ using MusicStore.MVC.ViewModels;
 
 namespace MusicStore.MVC.Controllers
 {
+  [Authorize]
   public class AlbumsController : Controller
   {
     private readonly IUnitOfWork unitOfWork;

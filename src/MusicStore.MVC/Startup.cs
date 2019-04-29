@@ -40,13 +40,14 @@ namespace MusicStore.MVC
         .AddDefaultTokenProviders();
       services.Configure<IdentityOptions>(options =>
       {
+        // Password settings
         options.Password.RequireDigit = true;
         options.Password.RequireLowercase = true;
         options.Password.RequireNonAlphanumeric = true;
         options.Password.RequireUppercase = true;
         options.Password.RequiredLength = 8;
         options.Password.RequiredUniqueChars = 1;
-        
+
         // Lockout settings.
         options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
         options.Lockout.MaxFailedAccessAttempts = 5;
@@ -68,8 +69,13 @@ namespace MusicStore.MVC
         options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
 
         options.LoginPath = "/Accounts/Login";
-        options.AccessDeniedPath = "/User/AccessDenied";
+        options.AccessDeniedPath = "/Users/AccessDenied";
         options.SlidingExpiration = true;
+      });
+      services.AddAuthorization(options =>
+      {
+        options.AddPolicy("RequireAdministratorRole",
+            policy => policy.RequireRole("Administrator"));
       });
 
       services.AddAutoMapper();

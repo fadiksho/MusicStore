@@ -12,14 +12,11 @@ namespace MusicStore.MVC.Services
   public class DemoEmailSender : IEmailSender
   {
     private readonly EmailSenderOptions emailSenderOptions;
-    private readonly IHostingEnvironment env;
 
     public DemoEmailSender(
-      IOptions<AppSettings> settings,
-      IHostingEnvironment env)
+      IOptions<AppSettings> settings)
     {
-      this.emailSenderOptions = settings.Value.AuthMessageSenderOptions;
-      this.env = env;
+      this.emailSenderOptions = settings.Value.EmailSenderOptions;
     }
     public async Task SendEmailAsync(string email, string subject, string htmlMessage)
     {

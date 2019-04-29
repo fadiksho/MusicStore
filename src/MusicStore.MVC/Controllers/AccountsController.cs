@@ -16,7 +16,7 @@ namespace MusicStore.MVC.Controllers
     private readonly UserManager<User> userManager;
     private readonly SignInManager<User> signInManager;
     private readonly IEmailSender emailSender;
-
+    
     public AccountsController(
       UserManager<User> userManager,
       SignInManager<User> signInManager,

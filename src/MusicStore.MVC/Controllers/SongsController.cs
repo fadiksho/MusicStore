@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MusicStore.MVC.Abstraction.Pagination;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace MusicStore.MVC.Controllers
 {
+  [Authorize]
   public class SongsController : Controller
   {
     private readonly IUnitOfWork unitOfWork;

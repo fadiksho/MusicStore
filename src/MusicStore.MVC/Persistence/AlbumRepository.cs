@@ -41,11 +41,13 @@ namespace MusicStore.MVC.Persistence
       return mapper.Map<IEnumerable<Album>>(albumEntities);
     }
 
-    public async Task AddAsync(AlbumForCreatingDto dto)
+    public async Task<AlbumEntity> AddAsync(AlbumForCreatingDto dto)
     {
       var albumEntity = mapper.Map<AlbumEntity>(dto);
 
       await context.Albums.AddAsync(albumEntity);
+
+      return albumEntity;
     }
     public async Task UpdateAsync(AlbumForUpdatingDto dto)
     {

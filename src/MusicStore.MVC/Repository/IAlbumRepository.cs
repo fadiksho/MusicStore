@@ -1,4 +1,5 @@
 ﻿using MusicStore.MVC.Dto;
+using MusicStore.MVC.Entities;
 using MusicStore.MVC.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace MusicStore.MVC.Repository
   {
     Task<Album> GetAsync(int albumId);
     Task<IEnumerable<Album>> GetAllAsync();
-    Task AddAsync(AlbumForCreatingDto dto);
+    Task<AlbumEntity> AddAsync(AlbumForCreatingDto dto);
     Task UpdateAsync(AlbumForUpdatingDto dto);
     Task DeleteAsync(int albumId);
 

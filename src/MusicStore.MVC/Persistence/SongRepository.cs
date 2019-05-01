@@ -61,11 +61,13 @@ namespace MusicStore.MVC.Persistence
       return paggingResult;
     }
 
-    public async Task AddAsync(SongForCreatingDto dto)
+    public async Task<SongEntity> AddAsync(SongForCreatingDto dto)
     {
       var songEntity = mapper.Map<SongEntity>(dto);
 
       await context.Songs.AddAsync(songEntity);
+
+      return songEntity;
     }
     public async Task UpdateAsync(SongForUpdatingDto dto)
     {

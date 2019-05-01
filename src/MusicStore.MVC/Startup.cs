@@ -13,6 +13,7 @@ using MusicStore.MVC.Models;
 using MusicStore.MVC.Persistence.Data;
 using MusicStore.MVC.Repository.Data;
 using MusicStore.MVC.Services;
+using Newtonsoft.Json;
 using System;
 
 namespace MusicStore.MVC
@@ -74,7 +75,15 @@ namespace MusicStore.MVC
         options.AccessDeniedPath = "/Users/AccessDenied";
         options.SlidingExpiration = true;
       });
-      
+
+      services.AddCors(o => o.AddPolicy("EnableCors", builder =>
+      {
+        builder
+          .AllowAnyOrigin()
+          .AllowAnyHeader()
+          .AllowAnyMethod();
+      }));
+
       services.AddAuthorization(options =>
       {
         options.AddPolicy("RequireAdministratorRole",
@@ -88,7 +97,16 @@ namespace MusicStore.MVC
 
       services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-      services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+      services.AddMvc()
+        .AddJsonOptions(opt =>
+        {
+          opt.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
+        })
+        .ConfigureApiBehaviorOptions(options =>
+        {
+          options.SuppressMapClientErrors = true;
+        })
+        .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -106,6 +124,8 @@ namespace MusicStore.MVC
       }
 
       app.UseHttpsRedirection();
+
+      app.UseCors("EnableCors");
 
       app.UseStaticFiles();
 

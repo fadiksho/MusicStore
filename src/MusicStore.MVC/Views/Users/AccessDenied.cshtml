@@ -2,9 +2,7 @@
 @{
   ViewData["Title"] = "AccessDenied";
 }
-<div class="alert alert-danger">
-  
-</div>
+
 <div class="jumbotron">
   <h1 class="display-4">Access Denied, you don't have the authority to access to this resourse @Model.Url.</h1>
   <p class="lead">you are logged in as <span class="text-muted font-weight-bold">@Model.UserName, @Model.Email</span></p>
@@ -13,5 +11,5 @@
   <a asp-controller="Accounts"
      asp-action="Login"
      asp-route-returnUrl="@Model.Url"
-     class="btn btn-primary btn-lg" role="button">LogIn</a>
+     class="btn btn-outline-success px-4" role="button">LogIn</a>
 </div>

@@ -10,5 +10,7 @@ namespace MusicStore.MVC.Models
     public string Description { get; set; }
 
     public List<Song> Songs { get; set; }
+
+    public string OwenerId { get; set; }
   }
 }

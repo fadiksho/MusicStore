@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MusicStore.MVC.Authorization;
 using MusicStore.MVC.Persistence.Data;
 
 namespace MusicStore.MVC
@@ -24,9 +20,10 @@ namespace MusicStore.MVC
         var logger = services.GetRequiredService<ILogger<Program>>();
         try
         {
-          var context = services.GetRequiredService<MusicStoreContext>();
-          
-          DbInitializer.Initialize(context, logger);
+          DbInitializer.Initialize(services);
+          var userId = DbInitializer.EnsureUser(services, "admin", "fadiksho@gmail.com", "Password!23").Result;
+          DbInitializer.InitializeData(services, logger, userId);
+          DbInitializer.EnsureRole(services, userId, AutherazationConstants.AdministratorsRole).Wait();
         }
         catch (Exception ex)
         {

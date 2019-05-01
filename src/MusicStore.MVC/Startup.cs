@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MusicStore.MVC.Authorization;
 using MusicStore.MVC.Models;
 using MusicStore.MVC.Persistence.Data;
 using MusicStore.MVC.Repository.Data;
@@ -65,18 +67,22 @@ namespace MusicStore.MVC
       services.ConfigureApplicationCookie(options =>
       {
         // Cookie settings
-        options.Cookie.HttpOnly = true;
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-
+        options.Cookie.HttpOnly = false;
+        // 10 days
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(60 * 24 * 10);
         options.LoginPath = "/Accounts/Login";
         options.AccessDeniedPath = "/Users/AccessDenied";
         options.SlidingExpiration = true;
       });
+      
       services.AddAuthorization(options =>
       {
         options.AddPolicy("RequireAdministratorRole",
             policy => policy.RequireRole("Administrator"));
       });
+      services.AddScoped<IAuthorizationHandler, OwenerResourseHandler>();
+      // Admin handler
+      services.AddSingleton<IAuthorizationHandler, AdministratorsHandler>();
 
       services.AddAutoMapper();
 

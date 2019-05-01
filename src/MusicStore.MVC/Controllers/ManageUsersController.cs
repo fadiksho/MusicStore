@@ -72,9 +72,18 @@ namespace MusicStore.MVC.Controllers
         vm.Message = "Update user faild";
         return View(vm);
       }
-      var selectedRoles = vm.UserRoles.Where(c => c.IsSelected == true).Select(c => c.Name);
+      var addedRoles = vm.UserRoles.Where(c => c.IsSelected == true).Select(c => c.Name).ToList();
+      var removededRoles = vm.UserRoles.Where(c => c.IsSelected == false).Select(c => c.Name).ToList();
+      if (addedRoles.Count > 0)
+        await userManager.AddToRolesAsync(user, addedRoles);
 
-      await userManager.AddToRolesAsync(user, selectedRoles);
+      if (removededRoles.Count > 0)
+      {
+        // ToDo: Check if we have another admin before removing the role from users
+        // the system should have at least on admin
+        await userManager.RemoveFromRolesAsync(user, removededRoles);
+      }
+        
       vm.Message = "Update Succeded";
       return View(vm);
     }

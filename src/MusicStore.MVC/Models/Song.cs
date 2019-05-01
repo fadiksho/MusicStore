@@ -11,5 +11,7 @@ namespace MusicStore.MVC.Models
     public Album Album { get; set; }
     public List<Genre> Genres { get; set; }
       = new List<Genre>();
+
+    public string OwenerId { get; set; }
   }
 }

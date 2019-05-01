@@ -11,22 +11,28 @@
     <thead>
       <tr>
         <th scope="col">Name</th>
-        <th scope="col">Actions</th>
-      </tr>
+        @if (User.IsInRole(AutherazationOperations.Administrator.Name))
+        {
+          <th scope="col">Actions</th>
+        }
+        </tr>
     </thead>
     <tbody>
       @foreach (var genre in Model)
       {
         <tr>
           <td>@genre.Name</td>
-          <td>
-            <a asp-action="Edit"
-               asp-route-id="@genre.Id">Edit</a>
-            <form asp-action="Delete" method="post" class="d-inline-block ml-2">
-              <input name="id" asp-for="@genre.Id" type="hidden" />
-              <input type="submit" value="Delete" class="btn btn-sm btn-outline-danger" />
-            </form>
-          </td>
+          @if (User.IsInRole(AutherazationOperations.Administrator.Name))
+          {
+            <td>
+              <a asp-action="Edit"
+                 asp-route-id="@genre.Id">Edit</a>
+              <form asp-action="Delete" method="post" class="d-inline-block ml-2">
+                <input name="id" asp-for="@genre.Id" type="hidden" />
+                <input type="submit" value="Delete" class="btn btn-sm btn-outline-danger" />
+              </form>
+            </td>
+          }
         </tr>
       }
     </tbody>

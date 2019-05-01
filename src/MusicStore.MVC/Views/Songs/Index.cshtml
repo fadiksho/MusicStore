@@ -1,4 +1,5 @@
 ﻿@model PaggingResult<Song>
+@inject IAuthorizationService authSevice
 @{
   ViewData["Title"] = "Index";
 }
@@ -19,46 +20,50 @@
     <tbody>
       @foreach (var song in Model.TResult)
       {
-        <tr>
-          <td>@song.Name</td>
-          <td>
-            @if (song.Album != null)
-            {
+      <tr>
+        <td>@song.Name</td>
+        <td>
+          @if (song.Album != null)
+          {
             <a asp-controller="Albums"
                asp-action="Details"
-               asp-route-id="@song.Album.Id"
-               >@song.Album.Name</a>
+               asp-route-id="@song.Album.Id">@song.Album.Name</a>
             }
             else
             {
               <span class="text-warning">not specified</span>
             }
-          </td>
-          <td>
-            @if (song.Genres.Count > 0)
+        </td>
+        <td>
+          @if (song.Genres.Count > 0)
+          {
+            foreach (var genre in song.Genres)
             {
-              foreach (var genre in song.Genres)
-              {
-                @genre.Name<text>, </text>
-              }
+              @genre.Name<text>, </text>
             }
-            else
-            {
-              <text>not specified</text>
-            }
-          </td>
-          <td>
+          }
+          else
+          {
+            <text>not specified</text>
+          }
+        </td>
+        <td>
+          @if ((await authSevice.AuthorizeAsync(
+            User, song.OwenerId, AutherazationOperations.OwenResourse)).Succeeded)
+          {
             <a asp-action="Edit"
                asp-route-id="@song.Id">
               Edit
             </a>
             <form asp-action="Delete" method="post" class="d-inline-block ml-2">
-              <input name="id" asp-for="@song.Id" type="hidden"/>
-              <input name="page" asp-for="@Model.CurrentPage" type="hidden"/>
+              <input name="id" asp-for="@song.Id" type="hidden" />
+              <input name="page" asp-for="@Model.CurrentPage" type="hidden" />
               <input type="submit" value="Delete" class="btn btn-sm btn-outline-danger" />
             </form>
-          </td>
-        </tr>
+          }
+
+        </td>
+      </tr>
       }
     </tbody>
   </table>

@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MusicStore.MVC.Abstraction.Pagination;
+using MusicStore.MVC.Authorization;
 using MusicStore.MVC.Dto;
+using MusicStore.MVC.Models;
 using MusicStore.MVC.Repository.Data;
 using MusicStore.MVC.ViewModels;
 using System;
@@ -18,14 +21,20 @@ namespace MusicStore.MVC.Controllers
   {
     private readonly IUnitOfWork unitOfWork;
     private readonly ILogger logger;
+    private readonly IAuthorizationService authorizationService;
+    private readonly UserManager<User> userManager;
     private readonly IMapper mapper;
 
     public SongsController(IUnitOfWork unitOfWork,
       ILogger<SongsController> logger,
+      IAuthorizationService authorizationService,
+      UserManager<User> userManager,
       IMapper mapper)
     {
       this.unitOfWork = unitOfWork;
       this.logger = logger;
+      this.authorizationService = authorizationService;
+      this.userManager = userManager;
       this.mapper = mapper;
     }
     public async Task<IActionResult> Index(int page = 1)
@@ -33,7 +42,7 @@ namespace MusicStore.MVC.Controllers
       try
       {
         var songsPage = await unitOfWork.Songs.GetSongPage(new PaggingQuery { Page = page });
-
+       
         return View(songsPage);
       }
       catch (Exception ex)
@@ -49,6 +58,17 @@ namespace MusicStore.MVC.Controllers
     {
       try
       {
+        var song = await unitOfWork.Songs.GetAsync(id);
+
+        // temporary solutions tracking
+        // https://github.com/aspnet/AspNetCore.Docs/issues/10393
+        var isAuthorized = await authorizationService
+          .AuthorizeAsync(User, song.OwenerId, AutherazationOperations.OwenResourse);
+        if (!isAuthorized.Succeeded)
+        {
+          return RedirectToAction("AccessDenied", "Users");
+        }
+
         await unitOfWork.Songs.DeleteAsync(id);
 
         if (!await this.unitOfWork.SaveAsync())
@@ -106,6 +126,9 @@ namespace MusicStore.MVC.Controllers
         var selectedGenres = vm.Genres.Where(s => s.IsSelected);
         vm.Dto.GenresIds = await GetValidGenresIdsAsync(selectedGenres);
 
+        var currentUserId = userManager.GetUserId(User);
+        vm.Dto.OwenerId = currentUserId;
+
         await unitOfWork.Songs.AddAsync(vm.Dto);
 
         if (!await this.unitOfWork.SaveAsync())
@@ -129,6 +152,16 @@ namespace MusicStore.MVC.Controllers
       try
       {
         var song = await unitOfWork.Songs.GetAsync(id);
+
+        // temporary solutions tracking
+        // https://github.com/aspnet/AspNetCore.Docs/issues/10393
+        var isAuthorized = await authorizationService
+          .AuthorizeAsync(User, song.OwenerId, AutherazationOperations.OwenResourse);
+        if (!isAuthorized.Succeeded)
+        {
+          return RedirectToAction("AccessDenied", "Users");
+        }
+
         var genres = await unitOfWork.Genres.GetAllAsync();
         var songDto = mapper.Map<SongForUpdatingDto>(song);
         var genresDto = mapper.Map<List<CheckBoxItem>>(genres);
@@ -162,6 +195,17 @@ namespace MusicStore.MVC.Controllers
     {
       try
       {
+        var song = await unitOfWork.Songs.GetAsync(id);
+
+        // temporary solutions tracking
+        // https://github.com/aspnet/AspNetCore.Docs/issues/10393
+        var isAuthorized = await authorizationService
+          .AuthorizeAsync(User, song.OwenerId, AutherazationOperations.OwenResourse);
+        if (!isAuthorized.Succeeded)
+        {
+          return RedirectToAction("AccessDenied", "Users");
+        }
+
         if (!ModelState.IsValid)
           return View(vm);
 

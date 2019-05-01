@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MusicStore.MVC.Authorization;
 using MusicStore.MVC.Dto;
 using MusicStore.MVC.Repository.Data;
 using MusicStore.MVC.ViewModels;
@@ -25,7 +26,6 @@ namespace MusicStore.MVC.Controllers
       this.logger = logger;
       this.mapper = mapper;
     }
-    [Authorize]
     public async Task<IActionResult> Index()
     {
       try
@@ -42,6 +42,7 @@ namespace MusicStore.MVC.Controllers
     }
 
     [HttpPost]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> Delete(int id)
     {
       try
@@ -63,13 +64,14 @@ namespace MusicStore.MVC.Controllers
       // ToDo: Implement error page
       return View("ErrorSaving");
     }
-
+    [Authorize(Roles = "Administrator")]
     public IActionResult AddNewGenre()
     {
       return View();
     }
 
     [HttpPost]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> AddNewGenre(GenreForCreatingDto dto)
     {
       try
@@ -97,6 +99,7 @@ namespace MusicStore.MVC.Controllers
       return View("ErrorSaving");
     }
 
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> Edit(int id)
     {
       try
@@ -119,6 +122,7 @@ namespace MusicStore.MVC.Controllers
 
     [HttpPost]
     [AutoValidateAntiforgeryToken]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> Edit(int id, EditGenreViewModel vm)
     {
       try

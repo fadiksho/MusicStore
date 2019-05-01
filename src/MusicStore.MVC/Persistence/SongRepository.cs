@@ -30,6 +30,7 @@ namespace MusicStore.MVC.Persistence
         .Include(s => s.Album)
         .Include(s => s.GenreSong)
           .ThenInclude(s => s.Genre)
+        .AsNoTracking()
         .FirstOrDefaultAsync(s => s.Id == songId);
 
       return mapper.Map<Song>(songEntity);

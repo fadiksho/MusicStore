@@ -13,5 +13,6 @@ namespace MusicStore.MVC.Dto
 
     public IEnumerable<int> GenresIds { get; set; }
       = new List<int>();
+    public string OwenerId { get; set; }
   }
 }

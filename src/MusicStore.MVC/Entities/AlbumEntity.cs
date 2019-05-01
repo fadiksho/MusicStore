@@ -10,5 +10,7 @@ namespace MusicStore.MVC.Entities
     public string Description { get; set; }
 
     public List<SongEntity> Songs { get; set; }
+
+    public string OwenerId { get; set; }
   }
 }

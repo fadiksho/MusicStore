@@ -1,9 +1,9 @@
-import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import React from "react";
+import { Route, Switch } from "react-router-dom";
 
-import SongsPage from './components/Songs/SongsPage';
-import NavHeader from './components/common/NavHeader';
-import pageNotFound from './PageNotFound';
+import SongsPage from "./components/Songs/SongsPage";
+import NavHeader from "./components/common/NavHeader";
+import pageNotFound from "./PageNotFound";
 
 function App() {
   return (
@@ -19,9 +19,7 @@ function App() {
         </main>
       </div>
       <footer className="border-top footer text-muted">
-        <div className="container">
-          &copy; 2019 - MusicStore.MVC - Privacy
-        </div>
+        <div className="container">&copy; 2019 - MusicStore.MVC - Privacy</div>
       </footer>
     </div>
   );

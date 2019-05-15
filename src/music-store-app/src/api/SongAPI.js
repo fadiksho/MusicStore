@@ -1,6 +1,6 @@
-import { handleResponse, handleError } from "./apiUtils";
+import { handleResponse, handleError } from "./APIUtils";
 
-const baseUrl = process.env.REACT_APP_API_URL + "/songs/";
+const baseUrl = process.env.REACT_APP_API_URL + "song/";
 
 export function getSongsPage() {
   return fetch(baseUrl)

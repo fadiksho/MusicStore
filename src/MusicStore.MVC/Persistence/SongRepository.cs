@@ -39,11 +39,11 @@ namespace MusicStore.MVC.Persistence
     {
       if (query == null) query = new PaggingQuery();
 
-      var songsQuery = context.Songs.Include(s => s.GenreSong)
+      var songsQuery = context.Songs
         .Include(s => s.GenreSong)
           .ThenInclude(s => s.Genre)
         .Include(s => s.Album)
-        .AsTracking()
+        .AsNoTracking()
         .AsQueryable();
 
       var totalItems = songsQuery.Count();

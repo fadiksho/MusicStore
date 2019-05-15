@@ -100,7 +100,7 @@ namespace MusicStore.MVC
       services.AddMvc()
         .AddJsonOptions(opt =>
         {
-          opt.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
+          opt.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.All;
         })
         .ConfigureApiBehaviorOptions(options =>
         {

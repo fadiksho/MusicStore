@@ -1,1 +1,2 @@
 export const ADD_SONG = "ADD_SONG";
+export const LOAD_SONGS_PAGE_SUCCESS = "LOAD_SONGS_PAGE_SUCCESS";

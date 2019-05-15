@@ -1,57 +1,39 @@
 import React from "react";
 import { connect } from "react-redux";
 import * as songActions from "../../redux/actions/songActions";
+import SongList from "./SongList";
 import PropTypes from "prop-types";
 
 class SongsPage extends React.Component {
-  state = {
-    song: {
-      name: ""
-    }
-  };
-
-  handleChange = event => {
-    const song = { ...this.state.course, name: event.target.value };
-    this.setState({ song });
-  };
-
-  handleSubmit = event => {
-    event.preventDefault();
-    this.props.addSong(this.state.song);
-  };
-
+  componentDidMount() {
+    this.props.loadSongsPage().catch(error => {
+      // ToDo: handle error
+      throw error;
+    });
+  }
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <h2>Songs </h2>
-        <h3>Add Song</h3>
-        <input
-          type="text"
-          onChange={this.handleChange}
-          value={this.state.song.name}
-        />
-        <input type="submit" value="Save" />
-        {this.props.songs.map(song => (
-          <div key={song.name}>{song.name}</div>
-        ))}
-      </form>
+      <>
+        <div className="alert alert-primary">Songs List</div>
+        <SongList songs={this.props.songsPage.tResult} />
+      </>
     );
   }
 }
 
 SongsPage.propTypes = {
-  addSong: PropTypes.func.isRequired,
-  songs: PropTypes.array.isRequired
+  loadSongsPage: PropTypes.func.isRequired,
+  songsPage: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
   return {
-    songs: state.songs
+    songsPage: state.songsPage
   };
 }
 
 const mapDispatchToProps = {
-  addSong: songActions.addSong
+  loadSongsPage: songActions.loadSongsPage
 };
 
 export default connect(

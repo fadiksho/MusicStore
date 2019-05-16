@@ -124,7 +124,7 @@ namespace MusicStore.MVC.Controllers
         await signInManager.SignOutAsync();
         return RedirectToAction("Index", "Songs");
       }
-      catch (Exception ex)
+      catch
       {
         throw new NotImplementedException();
       }

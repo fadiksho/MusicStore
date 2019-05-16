@@ -30,7 +30,6 @@ function resolveJsonReferences(json) {
       let ref = obj.$ref;
       if (ref in byid) return byid[ref];
       // else we have to make it lazy:
-      console.log(refs);
       refs.push([parent, prop, ref]);
       return;
     } else if ("$id" in obj) {

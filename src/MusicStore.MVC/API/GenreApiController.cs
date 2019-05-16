@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 
 namespace MusicStore.MVC.API
 {
+  [Route("api/Genre")]
+  [ApiController]
   public class GenreApiController : ControllerBase
   {
     private readonly IUnitOfWork unitOfWork;

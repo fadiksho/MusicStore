@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import * as songActions from "../../redux/actions/songActions";
+import { loadSongsPage } from "../../redux/actions/songActions";
 import SongList from "./SongList";
 import PropTypes from "prop-types";
 
@@ -33,7 +33,7 @@ function mapStateToProps(state, ownProps) {
 }
 
 const mapDispatchToProps = {
-  loadSongsPage: songActions.loadSongsPage
+  loadSongsPage
 };
 
 export default connect(

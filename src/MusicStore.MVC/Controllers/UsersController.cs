@@ -26,7 +26,7 @@ namespace MusicStore.MVC.Controllers
         var user = await userManager.GetUserAsync(User);
         return View(user);
       }
-      catch (Exception ex)
+      catch
       {
         throw new NotImplementedException();
       }

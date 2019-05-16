@@ -5,6 +5,7 @@ import SongsPage from "./components/Songs/SongsPage";
 import GenresPage from "./components/Genres/GenresPage";
 import NavHeader from "./components/common/NavHeader";
 import pageNotFound from "./PageNotFound";
+import AlbumsPage from "./components/Albums/AlbumsPage";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Route exact path="/" component={SongsPage} />
             <Route path="/Songs" component={SongsPage} />
             <Route path="/Genres" component={GenresPage} />
+            <Route path="/Albums" component={AlbumsPage} />
             <Route component={pageNotFound} />
           </Switch>
         </main>

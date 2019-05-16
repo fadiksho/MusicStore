@@ -8,5 +8,6 @@ export default {
     hasPrevious: false,
     hasNext: false
   },
-  genres: []
+  genres: [],
+  albums: []
 };

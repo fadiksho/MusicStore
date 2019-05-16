@@ -7,5 +7,6 @@ export default {
     pageSize: 0,
     hasPrevious: false,
     hasNext: false
-  }
+  },
+  genres: []
 };

@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
-const GenreList = ({ genres }) => (
+const GenreList = ({ genres, onGenreDeleteClick }) => (
   <div className="container-fluid">
     <table className="table table-responsive-sm">
       <thead>
@@ -18,19 +18,12 @@ const GenreList = ({ genres }) => (
               <td>{genre.name}</td>
               <td>
                 <Link to={"Genres/Edit/" + genre.id}>Edit</Link>
-                <form
-                  asp-action="Delete"
-                  method="post"
-                  className="d-inline-block ml-2"
+                <button
+                  className="ml-2 btn btn-sm btn-outline-danger"
+                  onClick={() => onGenreDeleteClick(genre)}
                 >
-                  <input name="id" type="hidden" />
-                  <input name="page" type="hidden" />
-                  <input
-                    type="submit"
-                    value="Delete"
-                    className="btn btn-sm btn-outline-danger"
-                  />
-                </form>
+                  Delete
+                </button>
               </td>
             </tr>
           );
@@ -41,7 +34,8 @@ const GenreList = ({ genres }) => (
 );
 
 GenreList.propTypes = {
-  genres: PropTypes.array.isRequired
+  genres: PropTypes.array.isRequired,
+  onGenreDeleteClick: PropTypes.func.isRequired
 };
 
 export default GenreList;

@@ -16,8 +16,7 @@ function AlbumDetails({ albumId, album, loadAlbumDetails }) {
         throw error;
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [album.id]);
+  }, [album.id, albumId, loadAlbumDetails]);
 
   return (
     <div className="border shadow rounded-lg p-3">

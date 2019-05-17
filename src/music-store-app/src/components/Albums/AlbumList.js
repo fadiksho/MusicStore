@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
-const AlbumList = ({ albums }) => (
+const AlbumList = ({ albums, onAlbumDeleteClick }) => (
   <div className="container-fluid">
     <table className="table table-responsive-sm">
       <thead>
@@ -22,18 +22,12 @@ const AlbumList = ({ albums }) => (
               <td>{album.description}</td>
               <td>
                 <Link to={"Albums/Edit/" + album.id}>Edit</Link>
-                <form
-                  asp-action="Delete"
-                  method="post"
-                  className="d-inline-block ml-2"
+                <button
+                  className="ml-2 btn btn-sm btn-outline-danger"
+                  onClick={() => onAlbumDeleteClick(album)}
                 >
-                  <input name="id" type="hidden" />
-                  <input
-                    type="submit"
-                    value="Delete"
-                    className="btn btn-sm btn-outline-danger"
-                  />
-                </form>
+                  Delete
+                </button>
               </td>
             </tr>
           );
@@ -44,7 +38,8 @@ const AlbumList = ({ albums }) => (
 );
 
 AlbumList.propTypes = {
-  albums: PropTypes.array.isRequired
+  albums: PropTypes.array.isRequired,
+  onAlbumDeleteClick: PropTypes.func.isRequired
 };
 
 export default AlbumList;

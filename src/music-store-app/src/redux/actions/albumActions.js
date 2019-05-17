@@ -5,8 +5,12 @@ export function loadAlbumsSuccess(albums) {
   return { type: types.LOAD_ALBUM_PAGE_SUCCESS, albums };
 }
 
-export function loadAlbumDetailsSuccess() {
-  return { type: types.LOAD_ALBUM_DETAILS_SUCCESS };
+export function loadAlbumDetailsSuccess(album) {
+  return { type: types.LOAD_ALBUM_DETAILS_SUCCESS, album };
+}
+
+export function deleteAlbumSuccess(album) {
+  return { type: types.DELETE_ALBUM_SUCCESS, album };
 }
 
 export function loadAlbums() {
@@ -29,6 +33,20 @@ export function loadAlbumDetails(id) {
       .getAlbum(id)
       .then(album => {
         dispatch(loadAlbumDetailsSuccess(album));
+      })
+      .catch(error => {
+        // ToDo: Implement loadAlbumFailure;
+        throw error;
+      });
+  };
+}
+
+export function deleteAlbum(album) {
+  return function(dispatch) {
+    return albumApi
+      .deleteAlbum(album.id)
+      .then(() => {
+        dispatch(deleteAlbumSuccess(album));
       })
       .catch(error => {
         // ToDo: Implement loadAlbumFailure;

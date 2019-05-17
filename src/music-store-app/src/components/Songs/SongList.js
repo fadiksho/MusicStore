@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
-const SongList = ({ songs }) => (
+const SongList = ({ songs, onSongDeleteClick }) => (
   <div className="container-fluid">
     <table className="table table-responsive-sm">
       <thead>
@@ -49,23 +49,12 @@ const SongList = ({ songs }) => (
                 >
                   Edit
                 </Link>
-                <form
-                  asp-action="Delete"
-                  method="post"
-                  className="d-inline-block ml-2"
+                <button
+                  className="ml-2 btn btn-sm btn-outline-danger"
+                  onClick={() => onSongDeleteClick(song)}
                 >
-                  <input name="id" asp-for="@song.Id" type="hidden" />
-                  <input
-                    name="page"
-                    asp-for="@Model.CurrentPage"
-                    type="hidden"
-                  />
-                  <input
-                    type="submit"
-                    value="Delete"
-                    className="btn btn-sm btn-outline-danger"
-                  />
-                </form>
+                  Delete
+                </button>
               </td>
             </tr>
           );
@@ -77,7 +66,8 @@ const SongList = ({ songs }) => (
 );
 
 SongList.propTypes = {
-  songs: PropTypes.array.isRequired
+  songs: PropTypes.array.isRequired,
+  onSongDeleteClick: PropTypes.func.isRequired
 };
 
 export default SongList;

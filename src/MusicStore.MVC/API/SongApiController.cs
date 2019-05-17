@@ -83,8 +83,8 @@ namespace MusicStore.MVC.API
           dto.AlbumId = null;
 
         // Set the owner of this song to the current signedIn user
-        var currentUserId = userManager.GetUserId(User);
-        dto.OwenerId = currentUserId;
+        //var currentUserId = userManager.GetUserId(User);
+        //dto.OwenerId = currentUserId;
 
         var songEntity = await unitOfWork.Songs.AddAsync(dto);
         if (!await unitOfWork.SaveAsync())
@@ -121,10 +121,10 @@ namespace MusicStore.MVC.API
         if (dto.AlbumId != null && !await unitOfWork.Albums.Exist(dto.AlbumId))
           dto.AlbumId = null;
 
-        var isAuthorized = await authorizationService
-          .AuthorizeAsync(User, song.OwenerId, AutherazationOperations.OwenResourse);
-        if (!isAuthorized.Succeeded)
-          return Unauthorized();
+        //var isAuthorized = await authorizationService
+        //  .AuthorizeAsync(User, song.OwenerId, AutherazationOperations.OwenResourse);
+        //if (!isAuthorized.Succeeded)
+        //  return Unauthorized();
 
         await unitOfWork.Songs.UpdateAsync(dto);
         await unitOfWork.SaveAsync();
@@ -148,10 +148,10 @@ namespace MusicStore.MVC.API
         if (song == null)
           return NotFound();
 
-        var isAuthorized = await authorizationService
-          .AuthorizeAsync(User, song.OwenerId, AutherazationOperations.OwenResourse);
-        if (!isAuthorized.Succeeded)
-          return Unauthorized();
+        //var isAuthorized = await authorizationService
+        //  .AuthorizeAsync(User, song.OwenerId, AutherazationOperations.OwenResourse);
+        //if (!isAuthorized.Succeeded)
+        //  return Unauthorized();
 
         await unitOfWork.Songs.DeleteAsync(id);
         if (!await unitOfWork.SaveAsync())

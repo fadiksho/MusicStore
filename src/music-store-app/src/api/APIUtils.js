@@ -1,5 +1,8 @@
 export async function handleResponse(response) {
   if (response.ok) {
+    if (response.status === 204) {
+      return;
+    }
     return resolveJsonReferences(await response.json());
   }
   if (response.status === 400) {

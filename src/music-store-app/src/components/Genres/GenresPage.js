@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { loadGenres } from "../../redux/actions/genreActions";
+import { loadGenres, deleteGenre } from "../../redux/actions/genreActions";
 import GenreList from "./GenreList";
 import PropTypes from "prop-types";
 
@@ -11,11 +11,22 @@ class GenresPage extends React.Component {
       throw error;
     });
   }
+
+  handleDeleteGenre = genre => {
+    this.props.deleteGenre(genre).catch(error => {
+      // ToDo: handle error
+      throw error;
+    });
+  };
+
   render() {
     return (
       <>
         <div className="alert alert-primary">Genres List</div>
-        <GenreList genres={this.props.genres} />
+        <GenreList
+          onGenreDeleteClick={this.handleDeleteGenre}
+          genres={this.props.genres}
+        />
       </>
     );
   }
@@ -23,7 +34,8 @@ class GenresPage extends React.Component {
 
 GenresPage.propTypes = {
   loadGenres: PropTypes.func.isRequired,
-  genres: PropTypes.array.isRequired
+  genres: PropTypes.array.isRequired,
+  deleteGenre: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
@@ -33,7 +45,8 @@ function mapStateToProps(state, ownProps) {
 }
 
 const mapDispatchToProps = {
-  loadGenres
+  loadGenres,
+  deleteGenre
 };
 
 export default connect(

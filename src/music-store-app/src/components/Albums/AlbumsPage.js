@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { loadAlbums } from "../../redux/actions/albumActions";
+import { loadAlbums, deleteAlbum } from "../../redux/actions/albumActions";
 import AlbumList from "./AlbumList";
 import PropTypes from "prop-types";
 
@@ -11,11 +11,22 @@ class AlbumsPage extends React.Component {
       throw error;
     });
   }
+
+  handleDeleteAlbum = album => {
+    this.props.deleteAlbum(album).catch(error => {
+      // ToDo: handle error
+      throw error;
+    });
+  };
+
   render() {
     return (
       <>
         <div className="alert alert-primary">Albums List</div>
-        <AlbumList albums={this.props.albums} />
+        <AlbumList
+          onAlbumDeleteClick={this.handleDeleteAlbum}
+          albums={this.props.albums}
+        />
       </>
     );
   }
@@ -23,7 +34,8 @@ class AlbumsPage extends React.Component {
 
 AlbumsPage.propTypes = {
   loadAlbums: PropTypes.func.isRequired,
-  albums: PropTypes.array.isRequired
+  albums: PropTypes.array.isRequired,
+  deleteAlbum: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
@@ -33,7 +45,8 @@ function mapStateToProps(state, ownProps) {
 }
 
 const mapDispatchToProps = {
-  loadAlbums
+  loadAlbums,
+  deleteAlbum
 };
 
 export default connect(

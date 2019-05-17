@@ -61,6 +61,11 @@ namespace MusicStore.MVC.API
         if (album == null)
           return NotFound();
 
+        //var isAuthorized = await authorizationService
+        //  .AuthorizeAsync(User, album.OwenerId, AutherazationOperations.OwenResourse);
+        //if (!isAuthorized.Succeeded)
+        //  return Unauthorized();
+
         return album;
       }
       catch (Exception ex)
@@ -79,8 +84,8 @@ namespace MusicStore.MVC.API
       try
       {
         // Set the owner of this song to the current signedIn user
-        var currentUserId = userManager.GetUserId(User);
-        dto.OwenerId = currentUserId;
+        //var currentUserId = userManager.GetUserId(User);
+        //dto.OwenerId = currentUserId;
 
         var albumEntity = await unitOfWork.Albums.AddAsync(dto);
         if (!await unitOfWork.SaveAsync())
@@ -113,11 +118,10 @@ namespace MusicStore.MVC.API
         if (album.Id != id)
           return BadRequest();
 
-        
-        var isAuthorized = await authorizationService
-          .AuthorizeAsync(User, album.OwenerId, AutherazationOperations.OwenResourse);
-        if (!isAuthorized.Succeeded)
-          return Unauthorized();
+        //var isAuthorized = await authorizationService
+        //  .AuthorizeAsync(User, album.OwenerId, AutherazationOperations.OwenResourse);
+        //if (!isAuthorized.Succeeded)
+        //  return Unauthorized();
 
         await unitOfWork.Albums.UpdateAsync(dto);
         await unitOfWork.SaveAsync();
@@ -141,16 +145,20 @@ namespace MusicStore.MVC.API
         if (album == null)
           return NotFound();
 
-        var isAuthorized = await authorizationService
-          .AuthorizeAsync(User, album.OwenerId, AutherazationOperations.OwenResourse);
-        if (!isAuthorized.Succeeded)
-          return Unauthorized();
+        //var isAuthorized = await authorizationService
+        //  .AuthorizeAsync(User, album.OwenerId, AutherazationOperations.OwenResourse);
+        //if (!isAuthorized.Succeeded)
+        //  return Unauthorized();
 
         await unitOfWork.Albums.DeleteAsync(id);
         if (!await unitOfWork.SaveAsync())
           throw new Exception("Deleting album failed on save.");
 
-        return NoContent();
+        var result = new JsonResult(new { id })
+        {
+          StatusCode = 204
+        };
+        return result;
       }
       catch (Exception ex)
       {

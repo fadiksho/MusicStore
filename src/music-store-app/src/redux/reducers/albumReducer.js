@@ -7,6 +7,11 @@ export function albumReducer(state = initialState.albumsPage, action) {
       return { ...state, albums: [...action.albums] };
     case types.LOAD_ALBUM_DETAILS_SUCCESS:
       return { ...state, selectedAlbum: action.album };
+    case types.DELETE_ALBUM_SUCCESS:
+      return {
+        ...state,
+        albums: state.albums.filter(album => album.id !== action.album.id)
+      };
     default:
       return state;
   }

@@ -9,6 +9,10 @@ export function loadSongsPageSuccess(songsPage) {
   return { type: types.LOAD_SONGS_PAGE_SUCCESS, songsPage };
 }
 
+export function deleteSongSuccess(song) {
+  return { type: types.DELETE_SONG_SUCCESS, song };
+}
+
 export function loadSongsPage() {
   return function(dispatch) {
     return songApi
@@ -18,6 +22,20 @@ export function loadSongsPage() {
       })
       .catch(error => {
         // ToDo: Implement loadSongFailure;
+        throw error;
+      });
+  };
+}
+
+export function deleteSong(song) {
+  return function(dispatch) {
+    return songApi
+      .deleteSong(song.id)
+      .then(() => {
+        dispatch(deleteSongSuccess(song));
+      })
+      .catch(error => {
+        // ToDo: Implement loadAlbumFailure;
         throw error;
       });
   };

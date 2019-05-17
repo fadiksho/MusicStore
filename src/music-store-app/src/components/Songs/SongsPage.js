@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { loadSongsPage } from "../../redux/actions/songActions";
+import { loadSongsPage, deleteSong } from "../../redux/actions/songActions";
 import SongList from "./SongList";
 import PropTypes from "prop-types";
 
@@ -11,11 +11,22 @@ class SongsPage extends React.Component {
       throw error;
     });
   }
+
+  handleDeleteSong = song => {
+    this.props.deleteSong(song).catch(error => {
+      // ToDo: handle error
+      throw error;
+    });
+  };
+
   render() {
     return (
       <>
         <div className="alert alert-primary">Songs List</div>
-        <SongList songs={this.props.songsPage.tResult} />
+        <SongList
+          onSongDeleteClick={this.handleDeleteSong}
+          songs={this.props.songsPage.tResult}
+        />
       </>
     );
   }
@@ -23,7 +34,8 @@ class SongsPage extends React.Component {
 
 SongsPage.propTypes = {
   loadSongsPage: PropTypes.func.isRequired,
-  songsPage: PropTypes.object.isRequired
+  songsPage: PropTypes.object.isRequired,
+  deleteSong: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
@@ -33,7 +45,8 @@ function mapStateToProps(state, ownProps) {
 }
 
 const mapDispatchToProps = {
-  loadSongsPage
+  loadSongsPage,
+  deleteSong
 };
 
 export default connect(

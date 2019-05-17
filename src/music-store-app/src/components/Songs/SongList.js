@@ -21,7 +21,7 @@ const SongList = ({ songs }) => (
               <td>
                 {song.album ? (
                   <Link
-                    to={"/Details/" + song.album.id}
+                    to={"Albums/Details/" + song.album.id}
                     asp-controller="Albums"
                     asp-action="Details"
                     asp-route-id="@song.Album.Id"

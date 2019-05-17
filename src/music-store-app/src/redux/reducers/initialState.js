@@ -9,5 +9,10 @@ export default {
     hasNext: false
   },
   genres: [],
-  albums: []
+  albumsPage: {
+    albums: [],
+    selectedAlbum: {
+      songs: []
+    }
+  }
 };

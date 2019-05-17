@@ -8,6 +8,12 @@ export function getAlbums() {
     .catch(handleError);
 }
 
+export function getAlbum(id) {
+  return fetch(baseUrl + id)
+    .then(handleResponse)
+    .catch(handleError);
+}
+
 export function addNewAlbum(albumForCreatingDto) {
   return fetch(baseUrl, {
     method: "POST",

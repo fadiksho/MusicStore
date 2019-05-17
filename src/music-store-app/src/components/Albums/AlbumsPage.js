@@ -28,7 +28,7 @@ AlbumsPage.propTypes = {
 
 function mapStateToProps(state, ownProps) {
   return {
-    albums: state.albumsPage
+    albums: state.albumsPage.albums
   };
 }
 

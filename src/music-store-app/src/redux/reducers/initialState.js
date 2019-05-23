@@ -1,14 +1,25 @@
 export default {
   songsPage: {
-    tResult: [],
-    totalItems: 0,
-    totalPages: 0,
-    currentPage: 0,
-    pageSize: 0,
-    hasPrevious: false,
-    hasNext: false
+    songsPagedList: {
+      tResult: [],
+      totalItems: 0,
+      totalPages: 0,
+      currentPage: 0,
+      pageSize: 0,
+      hasPrevious: false,
+      hasNext: false
+    },
+    selectedSong: {
+      id: 0,
+      name: "",
+      owenerId: "",
+      genres: [],
+      album: {}
+    }
   },
-  genres: [],
+  genresPage: {
+    genres: []
+  },
   albumsPage: {
     albums: [],
     selectedAlbum: {

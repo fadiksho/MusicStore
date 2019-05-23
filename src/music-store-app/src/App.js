@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 
 import SongsPage from "./components/Songs/SongsPage";
+import ManageSongPage from "./components/Songs/ManageSongPage";
 import GenresPage from "./components/Genres/GenresPage";
 import NavHeader from "./components/common/NavHeader";
 import pageNotFound from "./PageNotFound";
@@ -16,6 +17,8 @@ function App() {
         <main role="main" className="pb-3">
           <Switch>
             <Route exact path="/" component={SongsPage} />
+            <Route path="/Songs/AddNewSong" component={ManageSongPage} />
+            <Route path="/Songs/Edit/:id" component={ManageSongPage} />
             <Route path="/Songs" component={SongsPage} />
             <Route path="/Genres" component={GenresPage} />
             <Route path="/Albums/Details/:id" component={AlbumDetails} />

@@ -18,12 +18,18 @@ export function addNewSong(songForCreatingDto) {
     .catch(handleError);
 }
 
-export function updateSong(id, songForUpdatingDto) {
-  return fetch(baseUrl + id, {
+export function updateSong(songForUpdatingDto) {
+  return fetch(baseUrl + songForUpdatingDto.id, {
     method: "PUT",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(songForUpdatingDto)
   })
+    .then(handleResponse)
+    .catch(handleError);
+}
+
+export function getSong(songId) {
+  return fetch(baseUrl + songId)
     .then(handleResponse)
     .catch(handleError);
 }

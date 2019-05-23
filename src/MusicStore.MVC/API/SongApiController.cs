@@ -90,7 +90,7 @@ namespace MusicStore.MVC.API
         if (!await unitOfWork.SaveAsync())
           throw new Exception("Creating song failed on save.");
 
-        var song = mapper.Map<Song>(songEntity);
+        var song = await unitOfWork.Songs.GetAsync(songEntity.Id);
         return song;
       }
       catch (Exception ex)

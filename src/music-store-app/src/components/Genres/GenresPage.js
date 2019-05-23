@@ -40,7 +40,7 @@ GenresPage.propTypes = {
 
 function mapStateToProps(state, ownProps) {
   return {
-    genres: state.genresPage
+    genres: state.genresPage.genres
   };
 }
 

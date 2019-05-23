@@ -25,7 +25,7 @@ class SongsPage extends React.Component {
         <div className="alert alert-primary">Songs List</div>
         <SongList
           onSongDeleteClick={this.handleDeleteSong}
-          songs={this.props.songsPage.tResult}
+          songs={this.props.songsPage.songsPagedList.tResult}
         />
       </>
     );

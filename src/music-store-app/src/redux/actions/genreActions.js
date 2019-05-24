@@ -1,5 +1,6 @@
 import * as types from "./actionTypes";
 import * as genreApi from "../../api/GenreAPI";
+import { beginApiCall } from "./apiStatusAction";
 
 export function loadGenresSuccess(genres) {
   return { type: types.LOAD_GENRES_PAGE_SUCCESS, genres };
@@ -19,6 +20,7 @@ export function addGenreSuccess() {
 
 export function loadGenres() {
   return function(dispatch) {
+    dispatch(beginApiCall());
     return genreApi
       .getGenres()
       .then(genres => {
@@ -33,6 +35,7 @@ export function loadGenres() {
 
 export function deleteGenre(genre) {
   return function(dispatch) {
+    dispatch(beginApiCall());
     return genreApi
       .deleteGenre(genre.id)
       .then(() => {
@@ -47,6 +50,7 @@ export function deleteGenre(genre) {
 
 export function updateGenre(genre) {
   return function(dispatch) {
+    dispatch(beginApiCall());
     return genreApi
       .updateGenre(genre)
       .then(() => {
@@ -61,6 +65,7 @@ export function updateGenre(genre) {
 
 export function addGenre(genre) {
   return function(dispatch) {
+    dispatch(beginApiCall());
     return genreApi
       .addNewGenre(genre)
       .then(() => {

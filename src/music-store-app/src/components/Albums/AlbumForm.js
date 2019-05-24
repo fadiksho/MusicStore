@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
-function AlbumForm({ albumId, albums, handleAlbumFormSubmit }) {
+function AlbumForm({ albumId, albums, isSaving, handleAlbumFormSubmit }) {
   const [albumName, setAlbumName] = useState("");
   const [albumDescription, setAlbumDescription] = useState("");
   useEffect(() => {
@@ -48,7 +48,12 @@ function AlbumForm({ albumId, albums, handleAlbumFormSubmit }) {
           onChange={event => setAlbumDescription(event.target.value)}
         />
       </div>
-      <input type="submit" value="Save" className="btn btn-success py-1 px-5" />
+      <input
+        type="submit"
+        disabled={isSaving}
+        value={isSaving ? "Saving..." : "Save"}
+        className="btn btn-success py-1 px-5"
+      />
       <button type="button" className="btn btn-danger px-5 py-1 ml-1">
         Cancel
       </button>
@@ -59,7 +64,8 @@ function AlbumForm({ albumId, albums, handleAlbumFormSubmit }) {
 AlbumForm.propTypes = {
   albumId: PropTypes.number.isRequired,
   albums: PropTypes.array.isRequired,
-  handleAlbumFormSubmit: PropTypes.func.isRequired
+  handleAlbumFormSubmit: PropTypes.func.isRequired,
+  isSaving: PropTypes.bool.isRequired
 };
 
 export default AlbumForm;

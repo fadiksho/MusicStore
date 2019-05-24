@@ -16,6 +16,7 @@ function ManageGenrePage({
   updateGenre
 }) {
   const [pageTitle, setPageTitle] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
   useEffect(() => {
     if (genreId === 0) setPageTitle("Add Genre");
     else setPageTitle("Edit Genre");
@@ -32,6 +33,7 @@ function ManageGenrePage({
     if (genre.id === 0) saveGenre = addGenre;
     else saveGenre = updateGenre;
 
+    setIsSaving(true);
     saveGenre(genre).then(() => {
       history.push("/Genres");
     });
@@ -43,12 +45,11 @@ function ManageGenrePage({
         genreId={genreId}
         genres={genres}
         handleGenreFormSubmit={handleFormSubmit}
+        isSaving={isSaving}
       />
     </>
   );
 }
-
-ManageGenrePage.propTypes = {};
 
 function mapStateToProps(state, ownProps) {
   const genreId = parseInt(ownProps.match.params.id) || 0;

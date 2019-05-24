@@ -1,9 +1,12 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import OverlayNavLoader from "./OverlayNavLoader";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-const NavHeader = () => {
+function NavHeader({ showLoader }) {
   const [showAddMenu, setshowAddMenu] = useState(false);
+  const [showProfileMenu, setshowProfileMenu] = useState(false);
   return (
     <header>
       <nav className="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -23,40 +26,30 @@ const NavHeader = () => {
             <span className="navbar-toggler-icon" />
           </button>
           <div className="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-            <ul className="navbar-nav flex-grow-1">
-              <li className="nav-item">
-                <NavLink to="/Songs" className="nav-link text-dark">
-                  Songs
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink to="/Genres" className="nav-link text-dark">
-                  Genres
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink to="/Albums" className="nav-link text-dark">
-                  Albums
-                </NavLink>
-              </li>
-              <li
-                className="nav-item dropdown mr-auto"
-                onClick={() => setshowAddMenu(!showAddMenu)}
-              >
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  id="navbarDropdown"
-                  role="button"
-                  data-toggle="dropdown"
+            <ul className="navbar-nav">
+              <NavLink to="/Songs" className="nav-item nav-link">
+                Songs
+              </NavLink>
+              <NavLink to="/Genres" className="nav-item nav-link">
+                Genres
+              </NavLink>
+              <NavLink to="/Albums" className="nav-item nav-link">
+                Albums
+              </NavLink>
+              <div className="dropdown">
+                <button
+                  className="btn nav-link btn-link dropdown dropdown-toggle"
+                  id="navbarAddDropdown"
+                  data-toggle="navbarAddDropdown"
                   aria-haspopup="true"
                   aria-expanded="false"
+                  onClick={() => setshowAddMenu(!showAddMenu)}
                 >
                   Add New
-                </a>
+                </button>
                 <div
                   className={"dropdown-menu " + (showAddMenu ? "show" : "")}
-                  aria-labelledby="navbarDropdown"
+                  aria-labelledby="navbarAddDropdown"
                 >
                   <NavLink
                     to="/Songs/AddNewSong"
@@ -80,23 +73,40 @@ const NavHeader = () => {
                     Album
                   </NavLink>
                 </div>
-              </li>
-              <li className="nav-item dropdown">
+              </div>
+
+              <div className="dropdown">
                 <button
                   type="button"
-                  className="btn btn-block text-left btn-outline-primary dropdown-toggle rounded-0 border-top-0 border-left-0 border-right-0"
-                  data-toggle="dropdown"
+                  className="btn nav-link btn-link dropdown dropdown-toggle"
+                  data-toggle="accountDropdown"
                   aria-haspopup="true"
                   aria-expanded="false"
+                  onClick={() => setshowProfileMenu(!showProfileMenu)}
                 >
-                  @User.Identity.Name
+                  User Name
                 </button>
                 <div
-                  className="dropdown-menu dropdown-menu-md-right"
+                  className={
+                    "dropdown-menu dropdown-menu-md-right " +
+                    (showProfileMenu ? "show" : "")
+                  }
                   aria-labelledby="accountDropdown"
                 >
-                  <a className="dropdown-item">My Profile</a>
-                  <a className="dropdown-item">Manage Users</a>
+                  <NavLink
+                    className="dropdown-item"
+                    to="/User/Profile"
+                    onClick={() => setshowProfileMenu(!showProfileMenu)}
+                  >
+                    My Profile
+                  </NavLink>
+                  <NavLink
+                    className="dropdown-item"
+                    to="/Users/Manage"
+                    onClick={() => setshowProfileMenu(!showProfileMenu)}
+                  >
+                    Manage Users
+                  </NavLink>
                   <div className="dropdown-divider" />
                   <form asp-controller="Accounts" asp-action="Logout">
                     <button type="submit" className="dropdown-item">
@@ -104,13 +114,24 @@ const NavHeader = () => {
                     </button>
                   </form>
                 </div>
-              </li>
+              </div>
             </ul>
           </div>
         </div>
       </nav>
+      <OverlayNavLoader show={showLoader} />
     </header>
   );
+}
+
+function mapStateToProps(state) {
+  return {
+    showLoader: state.apiCallsInProgress > 0
+  };
+}
+
+NavHeader.propTypes = {
+  showLoader: PropTypes.bool.isRequired
 };
 
-export default NavHeader;
+export default connect(mapStateToProps)(NavHeader);

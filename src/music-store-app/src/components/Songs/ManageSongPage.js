@@ -10,7 +10,8 @@ class ManageSongPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pageTitle: ""
+      pageTitle: "",
+      isSaving: false
     };
   }
   componentDidMount() {
@@ -44,6 +45,9 @@ class ManageSongPage extends React.Component {
     if (song.id === 0) saveSong = this.props.addSong;
     else saveSong = this.props.updateSong;
 
+    this.setState({
+      isSaving: true
+    });
     saveSong(song).then(() => {
       this.props.history.push("/Songs");
     });
@@ -56,6 +60,7 @@ class ManageSongPage extends React.Component {
           song={this.props.song}
           genres={this.props.genres}
           handleSongFormSubmit={this.handleFormSubmit}
+          isSaving={this.state.isSaving}
         />
       </>
     );

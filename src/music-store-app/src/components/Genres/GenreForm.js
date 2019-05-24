@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
-function GenreForm({ genreId, genres, handleGenreFormSubmit }) {
+function GenreForm({ genreId, genres, handleGenreFormSubmit, isSaving }) {
   const [genreName, setGenreName] = useState("");
   useEffect(() => {
     if (genres.length > 0 && genreId !== 0) {
@@ -32,7 +32,12 @@ function GenreForm({ genreId, genres, handleGenreFormSubmit }) {
           onChange={event => setGenreName(event.target.value)}
         />
       </div>
-      <input type="submit" value="Save" className="btn btn-success py-1 px-5" />
+      <input
+        type="submit"
+        disabled={isSaving}
+        value={isSaving ? "Saving..." : "Save"}
+        className="btn btn-success py-1 px-5"
+      />
       <button type="button" className="btn btn-danger px-5 py-1 ml-1">
         Cancel
       </button>
@@ -43,7 +48,8 @@ function GenreForm({ genreId, genres, handleGenreFormSubmit }) {
 GenreForm.propTypes = {
   genreId: PropTypes.number.isRequired,
   genres: PropTypes.array.isRequired,
-  handleGenreFormSubmit: PropTypes.func.isRequired
+  handleGenreFormSubmit: PropTypes.func.isRequired,
+  isSaving: PropTypes.bool.isRequired
 };
 
 export default GenreForm;

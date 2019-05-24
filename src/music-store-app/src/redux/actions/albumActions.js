@@ -1,5 +1,6 @@
 import * as types from "./actionTypes";
 import * as albumApi from "../../api/AlbumAPI";
+import { beginApiCall } from "./apiStatusAction";
 
 export function loadAlbumsSuccess(albums) {
   return { type: types.LOAD_ALBUM_PAGE_SUCCESS, albums };
@@ -23,6 +24,7 @@ export function updateAlbumSuccess(album) {
 
 export function loadAlbums() {
   return function(dispatch) {
+    dispatch(beginApiCall());
     return albumApi
       .getAlbums()
       .then(albums => {
@@ -37,6 +39,7 @@ export function loadAlbums() {
 
 export function loadAlbumDetails(id) {
   return function(dispatch) {
+    dispatch(beginApiCall());
     return albumApi
       .getAlbum(id)
       .then(album => {
@@ -51,6 +54,7 @@ export function loadAlbumDetails(id) {
 
 export function deleteAlbum(album) {
   return function(dispatch) {
+    dispatch(beginApiCall());
     return albumApi
       .deleteAlbum(album.id)
       .then(() => {
@@ -65,6 +69,7 @@ export function deleteAlbum(album) {
 
 export function updateAlbum(album) {
   return function(dispatch) {
+    dispatch(beginApiCall());
     return albumApi
       .updateAlbum(album)
       .then(album => {
@@ -79,6 +84,7 @@ export function updateAlbum(album) {
 
 export function addAlbum(album) {
   return function(dispatch) {
+    dispatch(beginApiCall());
     return albumApi
       .addNewAlbum(album)
       .then(album => {

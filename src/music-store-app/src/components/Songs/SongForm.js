@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import MultiCheckBoxSelectionControll from "../common/MultiCheckBoxSelectionControll";
 
-function SongForm({ song, genres, handleSongFormSubmit }) {
+function SongForm({ song, genres, isSaving, handleSongFormSubmit }) {
   const [songName, setSongName] = useState("");
   const [albumId, setAlbumId] = useState(0);
   const [genresSelectItems, setGenresSelectItems] = useState([]);
@@ -68,7 +68,12 @@ function SongForm({ song, genres, handleSongFormSubmit }) {
         items={genresSelectItems}
         handleMultiCheckBoxChange={handleMultiCheckBoxChange}
       />
-      <input type="submit" value="Save" className="btn btn-success px-5" />
+      <input
+        type="submit"
+        disabled={isSaving}
+        value={isSaving ? "Saving..." : "Save"}
+        className="btn btn-success px-5"
+      />
       <button type="button" className="btn btn-danger px-5 ml-1">
         Cancel
       </button>
@@ -79,7 +84,8 @@ function SongForm({ song, genres, handleSongFormSubmit }) {
 SongForm.propTypes = {
   song: PropTypes.object.isRequired,
   genres: PropTypes.array.isRequired,
-  handleSongFormSubmit: PropTypes.func.isRequired
+  handleSongFormSubmit: PropTypes.func.isRequired,
+  isSaving: PropTypes.bool.isRequired
 };
 
 export default SongForm;

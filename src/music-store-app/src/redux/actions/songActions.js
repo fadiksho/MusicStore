@@ -1,5 +1,6 @@
 import * as types from "./actionTypes";
 import * as songApi from "../../api/SongAPI";
+import { beginApiCall } from "./apiStatusAction";
 
 export function loadSongsPageSuccess(songsPagedList) {
   return { type: types.LOAD_SONGS_PAGE_SUCCESS, songsPagedList };
@@ -23,6 +24,7 @@ export function addSongSuccess(song) {
 
 export function loadSongsPage() {
   return function(dispatch) {
+    dispatch(beginApiCall());
     return songApi
       .getSongsPage()
       .then(songsPagedList => {
@@ -37,6 +39,7 @@ export function loadSongsPage() {
 
 export function updateSong(songForUpdatingDto) {
   return function(dispatch) {
+    dispatch(beginApiCall());
     return songApi
       .updateSong(songForUpdatingDto)
       .then(song => {
@@ -51,6 +54,7 @@ export function updateSong(songForUpdatingDto) {
 
 export function addSong(songForCreatingDto) {
   return function(dispatch) {
+    dispatch(beginApiCall());
     return songApi
       .addNewSong(songForCreatingDto)
       .then(song => {
@@ -65,6 +69,7 @@ export function addSong(songForCreatingDto) {
 
 export function loadSong(id) {
   return function(dispatch) {
+    dispatch(beginApiCall());
     return songApi
       .getSong(id)
       .then(song => {
@@ -79,6 +84,7 @@ export function loadSong(id) {
 
 export function deleteSong(song) {
   return function(dispatch) {
+    dispatch(beginApiCall());
     return songApi
       .deleteSong(song.id)
       .then(() => {

@@ -18,6 +18,7 @@ function ManageAlbumPage({
   updateAlbum
 }) {
   const [pageTitle, setPageTitle] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
   useEffect(() => {
     if (albumId === 0) setPageTitle("Add Album");
     else setPageTitle("Edit Album");
@@ -34,6 +35,7 @@ function ManageAlbumPage({
     if (album.id === 0) saveGenre = addAlbum;
     else saveGenre = updateAlbum;
 
+    setIsSaving(true);
     saveGenre(album).then(() => {
       history.push("/Albums");
     });
@@ -46,6 +48,7 @@ function ManageAlbumPage({
         albumId={albumId}
         albums={albums}
         handleAlbumFormSubmit={handleFormSubmit}
+        isSaving={isSaving}
       />
     </>
   );

@@ -9,6 +9,14 @@ export function deleteGenreSuccess(genre) {
   return { type: types.DELETE_GENRE_SUCCESS, genre };
 }
 
+export function updateGenreSuccess() {
+  return { type: types.UPDATE_GENRE_SUCCESS };
+}
+
+export function addGenreSuccess() {
+  return { type: types.ADD_GENRE_SUCCESS };
+}
+
 export function loadGenres() {
   return function(dispatch) {
     return genreApi
@@ -32,6 +40,34 @@ export function deleteGenre(genre) {
       })
       .catch(error => {
         // ToDo: Implement loadGenreFailure;
+        throw error;
+      });
+  };
+}
+
+export function updateGenre(genre) {
+  return function(dispatch) {
+    return genreApi
+      .updateGenre(genre)
+      .then(() => {
+        dispatch(updateGenreSuccess());
+      })
+      .catch(error => {
+        // ToDo: Implement loadSongFailure;
+        throw error;
+      });
+  };
+}
+
+export function addGenre(genre) {
+  return function(dispatch) {
+    return genreApi
+      .addNewGenre(genre)
+      .then(() => {
+        dispatch(addGenreSuccess());
+      })
+      .catch(error => {
+        // ToDo: Implement loadSongFailure;
         throw error;
       });
   };

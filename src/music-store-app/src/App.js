@@ -3,6 +3,8 @@ import { Route, Switch } from "react-router-dom";
 
 import SongsPage from "./components/Songs/SongsPage";
 import ManageSongPage from "./components/Songs/ManageSongPage";
+import ManageGenrePage from "./components/Genres/ManageGenrePage";
+import ManageAlbumPage from "./components/Albums/ManageAlbumPage";
 import GenresPage from "./components/Genres/GenresPage";
 import NavHeader from "./components/common/NavHeader";
 import pageNotFound from "./PageNotFound";
@@ -20,7 +22,11 @@ function App() {
             <Route path="/Songs/AddNewSong" component={ManageSongPage} />
             <Route path="/Songs/Edit/:id" component={ManageSongPage} />
             <Route path="/Songs" component={SongsPage} />
+            <Route path="/Genres/AddNewGenre" component={ManageGenrePage} />
+            <Route path="/Genres/Edit/:id" component={ManageGenrePage} />
             <Route path="/Genres" component={GenresPage} />
+            <Route path="/Albums/AddNewAlbum" component={ManageAlbumPage} />
+            <Route path="/Albums/Edit/:id" component={ManageAlbumPage} />
             <Route path="/Albums/Details/:id" component={AlbumDetails} />
             <Route path="/Albums" component={AlbumsPage} />
             <Route component={pageNotFound} />

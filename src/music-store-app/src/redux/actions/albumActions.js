@@ -13,6 +13,14 @@ export function deleteAlbumSuccess(album) {
   return { type: types.DELETE_ALBUM_SUCCESS, album };
 }
 
+export function addAlbumSuccess(album) {
+  return { type: types.ADD_ALBUM_SUCCESS, album };
+}
+
+export function updateAlbumSuccess(album) {
+  return { type: types.UPDATE_ALBUM_SUCCESS, album };
+}
+
 export function loadAlbums() {
   return function(dispatch) {
     return albumApi
@@ -50,6 +58,34 @@ export function deleteAlbum(album) {
       })
       .catch(error => {
         // ToDo: Implement loadAlbumFailure;
+        throw error;
+      });
+  };
+}
+
+export function updateAlbum(album) {
+  return function(dispatch) {
+    return albumApi
+      .updateAlbum(album)
+      .then(album => {
+        dispatch(updateAlbumSuccess(album));
+      })
+      .catch(error => {
+        // ToDo: Implement loadSongFailure;
+        throw error;
+      });
+  };
+}
+
+export function addAlbum(album) {
+  return function(dispatch) {
+    return albumApi
+      .addNewAlbum(album)
+      .then(album => {
+        dispatch(addAlbumSuccess(album));
+      })
+      .catch(error => {
+        // ToDo: Implement loadSongFailure;
         throw error;
       });
   };

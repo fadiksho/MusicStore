@@ -54,7 +54,6 @@ export function addSong(songForCreatingDto) {
     return songApi
       .addNewSong(songForCreatingDto)
       .then(song => {
-        console.log(song);
         dispatch(addSongSuccess(song));
       })
       .catch(error => {

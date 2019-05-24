@@ -1,6 +1,6 @@
 import { handleResponse, handleError } from "./APIUtils";
 
-const baseUrl = process.env.REACT_APP_API_URL + "genre/";
+const baseUrl = process.env.REACT_APP_API_URL + "Genre/";
 
 export function getGenres() {
   return fetch(baseUrl)
@@ -18,8 +18,8 @@ export function addNewGenre(genreForCreatingDto) {
     .catch(handleError);
 }
 
-export function updateGenre(id, genreForUpdatingDto) {
-  return fetch(baseUrl + id, {
+export function updateGenre(genreForUpdatingDto) {
+  return fetch(baseUrl + genreForUpdatingDto.id, {
     method: "PUT",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(genreForUpdatingDto)

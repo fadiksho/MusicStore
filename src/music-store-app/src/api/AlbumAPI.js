@@ -24,8 +24,8 @@ export function addNewAlbum(albumForCreatingDto) {
     .catch(handleError);
 }
 
-export function updateAlbum(id, albumForUpdatingDto) {
-  return fetch(baseUrl + id, {
+export function updateAlbum(albumForUpdatingDto) {
+  return fetch(baseUrl + albumForUpdatingDto.id, {
     method: "PUT",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(albumForUpdatingDto)

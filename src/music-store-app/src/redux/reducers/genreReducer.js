@@ -8,7 +8,7 @@ export function genreReducer(state = initialState.genresPage, action) {
     case types.DELETE_GENRE_SUCCESS:
       return {
         ...state,
-        genres: action.genres.filter(genre => genre.id !== action.genre.id)
+        genres: state.genres.filter(genre => genre.id !== action.genre.id)
       };
     default:
       return state;

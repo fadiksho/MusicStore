@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -122,7 +123,7 @@ namespace MusicStore.MVC.Controllers
       try
       {
         await signInManager.SignOutAsync();
-        return RedirectToAction("Index", "Songs");
+        return RedirectToAction("Login", "Accounts");
       }
       catch
       {

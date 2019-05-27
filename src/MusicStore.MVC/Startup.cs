@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using MusicStore.MVC.Authorization;
 using MusicStore.MVC.Models;
 using MusicStore.MVC.Persistence.Data;
@@ -15,6 +17,7 @@ using MusicStore.MVC.Repository.Data;
 using MusicStore.MVC.Services;
 using Newtonsoft.Json;
 using System;
+using System.Text;
 
 namespace MusicStore.MVC
 {
@@ -41,6 +44,7 @@ namespace MusicStore.MVC
       services.AddIdentity<User, IdentityRole>()
         .AddEntityFrameworkStores<MusicStoreContext>()
         .AddDefaultTokenProviders();
+
       services.Configure<IdentityOptions>(options =>
       {
         // Password settings
@@ -75,7 +79,7 @@ namespace MusicStore.MVC
         options.AccessDeniedPath = "/Users/AccessDenied";
         options.SlidingExpiration = true;
       });
-
+      
       services.AddCors(o => o.AddPolicy("EnableCors", builder =>
       {
         builder
@@ -84,11 +88,31 @@ namespace MusicStore.MVC
           .AllowAnyMethod();
       }));
 
+      services.AddAuthentication()
+        .AddCookie()
+        .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+         {
+           options.SaveToken = true;
+           options.RequireHttpsMetadata = false;
+           options.TokenValidationParameters = new TokenValidationParameters
+           {
+             ValidIssuer = appSetting.Token.Issuer,
+             ValidAudiences = appSetting.Token.Audience,
+             ValidateIssuerSigningKey = true,
+             IssuerSigningKey =
+               new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSetting.Token.Key)),
+             ValidateLifetime = true,
+             ValidateIssuer = true,
+             ValidateAudience = true,
+             ClockSkew = TimeSpan.Zero
+           };
+         });
       services.AddAuthorization(options =>
       {
         options.AddPolicy("RequireAdministratorRole",
             policy => policy.RequireRole("Administrator"));
       });
+
       services.AddScoped<IAuthorizationHandler, OwenerResourseHandler>();
       // Admin handler
       services.AddSingleton<IAuthorizationHandler, AdministratorsHandler>();

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace MusicStore.MVC.Services
+﻿namespace MusicStore.MVC.Services
 {
   public class AppSettings
   {
     public ConnectionStrings ConnectionStrings { get; set; }
     public EmailSenderOptions EmailSenderOptions { get; set; }
+
+    public TokenSettings Token { get; set; }
   }
 
   public class ConnectionStrings
@@ -22,5 +19,13 @@ namespace MusicStore.MVC.Services
     public string SenderEmail { get; set; }
     public string SendGridUser { get; set; }
     public string SendGridKey { get; set; }
+  }
+
+  public class TokenSettings
+  {
+    public string Key { get; set; }
+    public string Issuer { get; set; }
+    public string[] Audience { get; set; }
+    public string AdminPassword { get; set; }
   }
 }

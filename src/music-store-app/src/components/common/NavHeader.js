@@ -1,12 +1,27 @@
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { NavLink, withRouter } from "react-router-dom";
 import OverlayNavLoader from "./OverlayNavLoader";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { isAuthenticated } from "../../services/auth.service";
+import { logout } from "../../redux/actions/authActions";
 
-function NavHeader({ showLoader }) {
+function NavHeader({ showLoader, user, logout, history }) {
   const [showAddMenu, setshowAddMenu] = useState(false);
   const [showProfileMenu, setshowProfileMenu] = useState(false);
+  const [collapseNav, setCollapseNav] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  function handleLogout() {
+    setshowProfileMenu(false);
+    logout();
+    history.push("/login");
+  }
+  useEffect(() => {
+    console.log("Nav Effect Magic!");
+    if (isAuthenticated(user)) setIsLoggedIn(true);
+    else setIsLoggedIn(false);
+  }, [user]);
   return (
     <header>
       <nav className="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -17,15 +32,19 @@ function NavHeader({ showLoader }) {
           <button
             className="navbar-toggler"
             type="button"
-            data-toggle="collapse"
-            data-target=".navbar-collapse"
+            onClick={() => setCollapseNav(!collapseNav)}
             aria-controls="navbarSupportedContent"
             aria-expanded="false"
             aria-label="Toggle navigation"
           >
             <span className="navbar-toggler-icon" />
           </button>
-          <div className="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+          <div
+            className={
+              "navbar-collapse d-sm-inline-flex flex-sm-row-reverse " +
+              (collapseNav ? "collapse" : "")
+            }
+          >
             <ul className="navbar-nav">
               <NavLink to="/Songs" className="nav-item nav-link">
                 Songs
@@ -74,47 +93,47 @@ function NavHeader({ showLoader }) {
                   </NavLink>
                 </div>
               </div>
-
-              <div className="dropdown">
-                <button
-                  type="button"
-                  className="btn nav-link btn-link dropdown dropdown-toggle"
-                  data-toggle="accountDropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                  onClick={() => setshowProfileMenu(!showProfileMenu)}
-                >
-                  User Name
-                </button>
-                <div
-                  className={
-                    "dropdown-menu dropdown-menu-md-right " +
-                    (showProfileMenu ? "show" : "")
-                  }
-                  aria-labelledby="accountDropdown"
-                >
-                  <NavLink
-                    className="dropdown-item"
-                    to="/User/Profile"
+              {!isLoggedIn ? (
+                <NavLink to="/login" className="nav-item nav-link">
+                  Login
+                </NavLink>
+              ) : (
+                <div className="dropdown">
+                  <button
+                    type="button"
+                    className="btn nav-link btn-link dropdown dropdown-toggle"
+                    data-toggle="accountDropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
                     onClick={() => setshowProfileMenu(!showProfileMenu)}
                   >
-                    My Profile
-                  </NavLink>
-                  <NavLink
-                    className="dropdown-item"
-                    to="/Users/Manage"
-                    onClick={() => setshowProfileMenu(!showProfileMenu)}
+                    {user.user_Name}
+                  </button>
+                  <div
+                    className={
+                      "dropdown-menu dropdown-menu-md-right " +
+                      (showProfileMenu ? "show" : "")
+                    }
+                    aria-labelledby="accountDropdown"
                   >
-                    Manage Users
-                  </NavLink>
-                  <div className="dropdown-divider" />
-                  <form asp-controller="Accounts" asp-action="Logout">
-                    <button type="submit" className="dropdown-item">
+                    <NavLink
+                      className="dropdown-item"
+                      to="/User/Profile"
+                      onClick={() => setshowProfileMenu(!showProfileMenu)}
+                    >
+                      My Profile
+                    </NavLink>
+                    <div className="dropdown-divider" />
+                    <button
+                      onClick={handleLogout}
+                      type="button"
+                      className="dropdown-item"
+                    >
                       Logout
                     </button>
-                  </form>
+                  </div>
                 </div>
-              </div>
+              )}
             </ul>
           </div>
         </div>
@@ -126,12 +145,25 @@ function NavHeader({ showLoader }) {
 
 function mapStateToProps(state) {
   return {
-    showLoader: state.apiCallsInProgress > 0
+    showLoader: state.apiCallsInProgress > 0,
+    user: state.auth.user
   };
 }
 
-NavHeader.propTypes = {
-  showLoader: PropTypes.bool.isRequired
+const mapDispatchToProps = {
+  logout
 };
 
-export default connect(mapStateToProps)(NavHeader);
+NavHeader.propTypes = {
+  showLoader: PropTypes.bool.isRequired,
+  user: PropTypes.object.isRequired,
+  logout: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired
+};
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(NavHeader)
+);

@@ -26,14 +26,12 @@ class ManageSongPage extends React.Component {
     }
 
     if (this.props.songId !== 0 && this.props.songId !== this.props.song.id) {
-      console.log("loading song");
       this.props.loadSong(this.props.songId).catch(error => {
         // ToDo: handle error
         throw error;
       });
     }
     if (this.props.genres.length === 0) {
-      console.log("loading genres");
       this.props.loadGenres().catch(error => {
         throw error;
       });

@@ -70,7 +70,7 @@ namespace MusicStore.MVC.API
         audience: tokenSetting.Audience[0],
         claims: claims,
         notBefore: DateTime.UtcNow,
-        expires: DateTime.UtcNow.AddMinutes(3),
+        expires: DateTime.UtcNow.AddMinutes(10),
         signingCredentials: creds
       );
 

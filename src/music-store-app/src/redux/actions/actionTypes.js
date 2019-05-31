@@ -1,3 +1,4 @@
+// asynchronous
 export const ADD_SONG = "ADD_SONG";
 export const LOAD_SONGS_PAGE_SUCCESS = "LOAD_SONGS_PAGE_SUCCESS";
 export const DELETE_SONG_SUCCESS = "DELETE_SONG_SUCCESS";
@@ -17,3 +18,10 @@ export const ADD_ALBUM_SUCCESS = "ADD_ALBUM_SUCCESS";
 export const UPDATE_ALBUM_SUCCESS = "UPDATE_ALBUM_SUCCESS";
 
 export const BEGIN_API_CALL = "BEGIN_API_CALL";
+
+export const LOGIN = "LOGIN";
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+
+// synchronous
+export const LOAD_USER_DONE = "LOAD_USER_DONE";
+export const LOGOUT_DONE = "LOGOUT_DONE";

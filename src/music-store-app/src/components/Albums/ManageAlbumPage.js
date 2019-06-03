@@ -31,14 +31,18 @@ function ManageAlbumPage({
   }, [albumId, albums.length, loadAlbums]);
 
   function handleFormSubmit(album) {
-    let saveGenre;
-    if (album.id === 0) saveGenre = addAlbum;
-    else saveGenre = updateAlbum;
+    let saveAlbum;
+    if (album.id === 0) saveAlbum = addAlbum;
+    else saveAlbum = updateAlbum;
 
     setIsSaving(true);
-    saveGenre(album).then(() => {
-      history.push("/Albums");
-    });
+    saveAlbum(album)
+      .then(() => {
+        history.push("/Albums");
+      })
+      .catch(error => {
+        setIsSaving(false);
+      });
   }
 
   return (

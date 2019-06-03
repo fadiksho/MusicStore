@@ -46,9 +46,15 @@ class ManageSongPage extends React.Component {
     this.setState({
       isSaving: true
     });
-    saveSong(song).then(() => {
-      this.props.history.push("/Songs");
-    });
+    saveSong(song)
+      .then(() => {
+        this.props.history.push("/Songs");
+      })
+      .catch(error => {
+        this.setState({
+          isSaving: false
+        });
+      });
   };
   render() {
     return (

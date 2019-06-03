@@ -1,6 +1,6 @@
 import * as types from "./actionTypes";
 import * as songApi from "../../api/SongAPI";
-import { beginApiCall } from "./apiStatusAction";
+import { beginApiCall, apiCallError } from "./apiStatusAction";
 
 export function loadSongsPageSuccess(songsPagedList) {
   return { type: types.LOAD_SONGS_PAGE_SUCCESS, songsPagedList };
@@ -31,6 +31,7 @@ export function loadSongsPage() {
         dispatch(loadSongsPageSuccess(songsPagedList));
       })
       .catch(error => {
+        dispatch(apiCallError());
         // ToDo: Implement loadSongFailure;
         throw error;
       });
@@ -46,6 +47,7 @@ export function updateSong(songForUpdatingDto) {
         dispatch(updateSongSuccess(song));
       })
       .catch(error => {
+        dispatch(apiCallError());
         // ToDo: Implement loadSongFailure;
         throw error;
       });
@@ -61,6 +63,7 @@ export function addSong(songForCreatingDto) {
         dispatch(addSongSuccess(song));
       })
       .catch(error => {
+        dispatch(apiCallError());
         // ToDo: Implement loadSongFailure;
         throw error;
       });
@@ -76,6 +79,7 @@ export function loadSong(id) {
         dispatch(loadSongSuccess(song));
       })
       .catch(error => {
+        dispatch(apiCallError());
         // ToDo: Implement loadSongFailure;
         throw error;
       });
@@ -91,6 +95,7 @@ export function deleteSong(song) {
         dispatch(deleteSongSuccess(song));
       })
       .catch(error => {
+        dispatch(apiCallError());
         // ToDo: Implement loadAlbumFailure;
         throw error;
       });

@@ -1,6 +1,6 @@
 import * as types from "./actionTypes";
 import * as genreApi from "../../api/GenreAPI";
-import { beginApiCall } from "./apiStatusAction";
+import { beginApiCall, apiCallError } from "./apiStatusAction";
 
 export function loadGenresSuccess(genres) {
   return { type: types.LOAD_GENRES_PAGE_SUCCESS, genres };
@@ -27,6 +27,7 @@ export function loadGenres() {
         dispatch(loadGenresSuccess(genres));
       })
       .catch(error => {
+        dispatch(apiCallError());
         // ToDo: Implement loadGenreFailure;
         throw error;
       });
@@ -57,6 +58,7 @@ export function updateGenre(genre) {
         dispatch(updateGenreSuccess());
       })
       .catch(error => {
+        dispatch(apiCallError());
         // ToDo: Implement loadSongFailure;
         throw error;
       });
@@ -72,6 +74,7 @@ export function addGenre(genre) {
         dispatch(addGenreSuccess());
       })
       .catch(error => {
+        dispatch(apiCallError());
         // ToDo: Implement loadSongFailure;
         throw error;
       });

@@ -34,9 +34,13 @@ function ManageGenrePage({
     else saveGenre = updateGenre;
 
     setIsSaving(true);
-    saveGenre(genre).then(() => {
-      history.push("/Genres");
-    });
+    saveGenre(genre)
+      .then(() => {
+        history.push("/Genres");
+      })
+      .catch(error => {
+        setIsSaving(false);
+      });
   }
   return (
     <>

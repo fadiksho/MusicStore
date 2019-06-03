@@ -18,6 +18,7 @@ export const ADD_ALBUM_SUCCESS = "ADD_ALBUM_SUCCESS";
 export const UPDATE_ALBUM_SUCCESS = "UPDATE_ALBUM_SUCCESS";
 
 export const BEGIN_API_CALL = "BEGIN_API_CALL";
+export const API_CALL_ERROR = "API_CALL_ERROR";
 
 export const LOGIN = "LOGIN";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";

@@ -1,6 +1,6 @@
 import * as types from "./actionTypes";
 import * as authApi from "../../api/authAPI";
-import { beginApiCall } from "./apiStatusAction";
+import { beginApiCall, apiCallError } from "./apiStatusAction";
 import * as authService from "../../services/auth.service";
 
 export function loginSuccess(user) {
@@ -11,7 +11,7 @@ export function loadUserDone(user) {
   return { type: types.LOAD_USER_DONE, user };
 }
 
-export function logoutSuccess() {
+export function logoutDone() {
   return { type: types.LOGOUT_DONE };
 }
 
@@ -24,6 +24,7 @@ export function login(loginForm) {
         dispatch(setToken(token));
       })
       .catch(error => {
+        dispatch(apiCallError());
         // ToDo: Implement loginFailure;
         throw error;
       });
@@ -51,6 +52,6 @@ export function loadUser(user) {
 export function logout() {
   return function(dispatch) {
     localStorage.removeItem("User");
-    dispatch(logoutSuccess());
+    dispatch(logoutDone());
   };
 }

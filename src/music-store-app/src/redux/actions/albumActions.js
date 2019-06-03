@@ -1,6 +1,6 @@
 import * as types from "./actionTypes";
 import * as albumApi from "../../api/AlbumAPI";
-import { beginApiCall } from "./apiStatusAction";
+import { beginApiCall, apiCallError } from "./apiStatusAction";
 
 export function loadAlbumsSuccess(albums) {
   return { type: types.LOAD_ALBUM_PAGE_SUCCESS, albums };
@@ -31,6 +31,7 @@ export function loadAlbums() {
         dispatch(loadAlbumsSuccess(albums));
       })
       .catch(error => {
+        dispatch(apiCallError());
         // ToDo: Implement loadAlbumFailure;
         throw error;
       });
@@ -46,6 +47,7 @@ export function loadAlbumDetails(id) {
         dispatch(loadAlbumDetailsSuccess(album));
       })
       .catch(error => {
+        dispatch(apiCallError());
         // ToDo: Implement loadAlbumFailure;
         throw error;
       });
@@ -61,6 +63,7 @@ export function deleteAlbum(album) {
         dispatch(deleteAlbumSuccess(album));
       })
       .catch(error => {
+        dispatch(apiCallError());
         // ToDo: Implement loadAlbumFailure;
         throw error;
       });
@@ -76,6 +79,7 @@ export function updateAlbum(album) {
         dispatch(updateAlbumSuccess(album));
       })
       .catch(error => {
+        dispatch(apiCallError());
         // ToDo: Implement loadSongFailure;
         throw error;
       });
@@ -91,6 +95,7 @@ export function addAlbum(album) {
         dispatch(addAlbumSuccess(album));
       })
       .catch(error => {
+        dispatch(apiCallError());
         // ToDo: Implement loadSongFailure;
         throw error;
       });

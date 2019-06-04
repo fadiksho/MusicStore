@@ -22,24 +22,24 @@ namespace MusicStore.MVC.API
   public class AccountsApiController : ControllerBase
   {
     private readonly UserManager<User> userManager;
-    private readonly SignInManager<User> signInManager;
     private readonly IPasswordHasher<User> passwordHasher;
     private readonly TokenSettings tokenSetting;
 
     public AccountsApiController(
       UserManager<User> userManager,
-      SignInManager<User> signInManager,
       IPasswordHasher<User> passwordHasher,
       IOptions<AppSettings> config
       )
     {
       this.userManager = userManager;
-      this.signInManager = signInManager;
       this.passwordHasher = passwordHasher;
       this.tokenSetting = config.Value.Token;
     }
+
     [AllowAnonymous]
     [HttpPost("api/auth/token")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
     public async Task<IActionResult> GenerateToken([FromBody]UserLogginDto model)
     {
       if (ModelState.IsValid != true) return BadRequest(ModelState.Values);
@@ -50,7 +50,7 @@ namespace MusicStore.MVC.API
 
       if (passwordHasher.VerifyHashedPassword(user, user.PasswordHash, model.Password)
       != PasswordVerificationResult.Success) return BadRequest("Wrong Credential!");
-      
+
       var claims = new List<Claim>
       {
         new Claim(JwtRegisteredClaimNames.Sub, user.UserName),

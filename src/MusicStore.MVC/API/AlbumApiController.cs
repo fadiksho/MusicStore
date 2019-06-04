@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,6 @@ using MusicStore.MVC.Dto;
 using MusicStore.MVC.Models;
 using MusicStore.MVC.Repository.Data;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,6 +16,7 @@ namespace MusicStore.MVC.API
 {
   [Route("api/Album")]
   [ApiController]
+  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   public class AlbumApiController : ControllerBase
   {
     private readonly IUnitOfWork unitOfWork;
@@ -38,12 +39,15 @@ namespace MusicStore.MVC.API
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Album>>> GetAll()
+    [AllowAnonymous]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
+    public async Task<IActionResult> GetAll()
     {
       try
       {
         var albums = (await unitOfWork.Albums.GetAllAsync()).ToList();
-        return albums;
+        return Ok(albums);
       }
       catch (Exception ex)
       {
@@ -53,7 +57,11 @@ namespace MusicStore.MVC.API
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Album>> GetAlbum(int id)
+    [ProducesResponseType(200)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
+    public async Task<IActionResult> GetAlbum(int id)
     {
       try
       {
@@ -61,12 +69,12 @@ namespace MusicStore.MVC.API
         if (album == null)
           return NotFound();
 
-        //var isAuthorized = await authorizationService
-        //  .AuthorizeAsync(User, album.OwenerId, AutherazationOperations.OwenResourse);
-        //if (!isAuthorized.Succeeded)
-        //  return Unauthorized();
+        var isAuthorized = await authorizationService
+          .AuthorizeAsync(User, album.OwenerId, AutherazationOperations.OwenResourse);
+        if (!isAuthorized.Succeeded)
+          return Unauthorized();
 
-        return album;
+        return Ok(album);
       }
       catch (Exception ex)
       {
@@ -76,7 +84,10 @@ namespace MusicStore.MVC.API
     }
 
     [HttpPost]
-    public async Task<ActionResult<Album>> CreateAlbum([FromBody]AlbumForCreatingDto dto)
+    [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
+    public async Task<IActionResult> CreateAlbum([FromBody]AlbumForCreatingDto dto)
     {
       if (!ModelState.IsValid)
         return BadRequest();
@@ -84,25 +95,30 @@ namespace MusicStore.MVC.API
       try
       {
         // Set the owner of this song to the current signedIn user
-        //var currentUserId = userManager.GetUserId(User);
-        //dto.OwenerId = currentUserId;
+        var currentUserId = userManager.GetUserId(User);
+        dto.OwenerId = currentUserId;
 
         var albumEntity = await unitOfWork.Albums.AddAsync(dto);
         if (!await unitOfWork.SaveAsync())
           throw new Exception("Creating Album failed on save.");
 
         var album = mapper.Map<Album>(albumEntity);
-        return album;
+        return StatusCode(201, album);
       }
       catch (Exception ex)
       {
-        logger.LogError(ex, "An error occurred while creating song.", dto);
+        logger.LogError(ex, "An error occurred while creating album.", dto);
         return StatusCode(500);
       }
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<Album>> UpdateeSong(
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
+    public async Task<IActionResult> UpdateeSong(
       int id,
       [FromBody]AlbumForUpdatingDto dto)
     {
@@ -118,16 +134,16 @@ namespace MusicStore.MVC.API
         if (album.Id != id)
           return BadRequest();
 
-        //var isAuthorized = await authorizationService
-        //  .AuthorizeAsync(User, album.OwenerId, AutherazationOperations.OwenResourse);
-        //if (!isAuthorized.Succeeded)
-        //  return Unauthorized();
+        var isAuthorized = await authorizationService
+          .AuthorizeAsync(User, album.OwenerId, AutherazationOperations.OwenResourse);
+        if (!isAuthorized.Succeeded)
+          return Unauthorized();
 
         await unitOfWork.Albums.UpdateAsync(dto);
         await unitOfWork.SaveAsync();
 
         album = await unitOfWork.Albums.GetAsync(id);
-        return album;
+        return Ok(album);
       }
       catch (Exception ex)
       {
@@ -137,7 +153,11 @@ namespace MusicStore.MVC.API
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteAlbum(int id)
+    [ProducesResponseType(204)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
+    public async Task<IActionResult> DeleteAlbum(int id)
     {
       try
       {
@@ -145,20 +165,16 @@ namespace MusicStore.MVC.API
         if (album == null)
           return NotFound();
 
-        //var isAuthorized = await authorizationService
-        //  .AuthorizeAsync(User, album.OwenerId, AutherazationOperations.OwenResourse);
-        //if (!isAuthorized.Succeeded)
-        //  return Unauthorized();
+        var isAuthorized = await authorizationService
+          .AuthorizeAsync(User, album.OwenerId, AutherazationOperations.OwenResourse);
+        if (!isAuthorized.Succeeded)
+          return Unauthorized();
 
         await unitOfWork.Albums.DeleteAsync(id);
         if (!await unitOfWork.SaveAsync())
           throw new Exception("Deleting album failed on save.");
 
-        var result = new JsonResult(new { id })
-        {
-          StatusCode = 204
-        };
-        return result;
+        return NoContent();
       }
       catch (Exception ex)
       {

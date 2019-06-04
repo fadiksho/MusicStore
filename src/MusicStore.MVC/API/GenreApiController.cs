@@ -1,13 +1,10 @@
-﻿using AutoMapper;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MusicStore.MVC.Dto;
-using MusicStore.MVC.Models;
 using MusicStore.MVC.Repository.Data;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,34 +12,29 @@ namespace MusicStore.MVC.API
 {
   [Route("api/Genre")]
   [ApiController]
+  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
   public class GenreApiController : ControllerBase
   {
     private readonly IUnitOfWork unitOfWork;
     private readonly ILogger logger;
-    private readonly IAuthorizationService authorizationService;
-    private readonly UserManager<User> userManager;
-    private readonly IMapper mapper;
 
     public GenreApiController(IUnitOfWork unitOfWork,
-      ILogger<SongApiController> logger,
-      IAuthorizationService authorizationService,
-      UserManager<User> userManager,
-      IMapper mapper)
+      ILogger<SongApiController> logger)
     {
       this.unitOfWork = unitOfWork;
       this.logger = logger;
-      this.authorizationService = authorizationService;
-      this.userManager = userManager;
-      this.mapper = mapper;
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Genre>>> GetAll()
+    [ProducesResponseType(200)]
+    [ProducesResponseType(500)]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetAll()
     {
       try
       {
         var genres = (await unitOfWork.Genres.GetAllAsync()).ToList();
-        return genres;
+        return Ok(genres);
       }
       catch (Exception ex)
       {
@@ -52,7 +44,9 @@ namespace MusicStore.MVC.API
     }
 
     [HttpPost]
-    public async Task<ActionResult> CreateGenre([FromBody]GenreForCreatingDto dto)
+    [ProducesResponseType(204)]
+    [ProducesResponseType(500)]
+    public async Task<IActionResult> CreateGenre([FromBody]GenreForCreatingDto dto)
     {
       if (!ModelState.IsValid)
         return BadRequest();
@@ -73,7 +67,11 @@ namespace MusicStore.MVC.API
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateeSong(
+    [ProducesResponseType(204)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
+    public async Task<IActionResult> UpdateeSong(
       int id,
       [FromBody]GenreForUpdatingDto dto)
     {
@@ -102,7 +100,10 @@ namespace MusicStore.MVC.API
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteGenre(int id)
+    [ProducesResponseType(204)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
+    public async Task<IActionResult> DeleteGenre(int id)
     {
       try
       {

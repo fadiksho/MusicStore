@@ -16,6 +16,7 @@ using MusicStore.MVC.Persistence.Data;
 using MusicStore.MVC.Repository.Data;
 using MusicStore.MVC.Services;
 using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Text;
 
@@ -79,7 +80,7 @@ namespace MusicStore.MVC
         options.AccessDeniedPath = "/Users/AccessDenied";
         options.SlidingExpiration = true;
       });
-      
+
       services.AddCors(o => o.AddPolicy("EnableCors", builder =>
       {
         builder
@@ -131,6 +132,11 @@ namespace MusicStore.MVC
           options.SuppressMapClientErrors = true;
         })
         .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+      services.AddSwaggerGen(c =>
+      {
+        c.SwaggerDoc("v1", new Info { Title = "Music Store DEMO API", Version = "v1" });
+      });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -154,6 +160,13 @@ namespace MusicStore.MVC
       app.UseStaticFiles();
 
       app.UseAuthentication();
+
+      app.UseSwagger();
+
+      app.UseSwaggerUI(c =>
+      {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Music Store DEMO API");
+      });
 
       app.UseMvc(routes =>
       {

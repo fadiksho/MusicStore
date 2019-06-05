@@ -26,6 +26,7 @@ class SongsPage extends React.Component {
         <SongList
           onSongDeleteClick={this.handleDeleteSong}
           songs={this.props.songsPage.songsPagedList.tResult}
+          user={this.props.user}
         />
       </>
     );
@@ -35,12 +36,14 @@ class SongsPage extends React.Component {
 SongsPage.propTypes = {
   loadSongsPage: PropTypes.func.isRequired,
   songsPage: PropTypes.object.isRequired,
-  deleteSong: PropTypes.func.isRequired
+  deleteSong: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
   return {
-    songsPage: state.songsPage
+    songsPage: state.songsPage,
+    user: state.auth.user
   };
 }
 

@@ -9,36 +9,34 @@ using MusicStore.MVC.Dto;
 using MusicStore.MVC.Models;
 using MusicStore.MVC.Repository.Data;
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MusicStore.MVC.API
 {
   [Route("api/Song")]
   [ApiController]
-  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
+  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
   public class SongApiController : ControllerBase
   {
     private readonly IUnitOfWork unitOfWork;
     private readonly ILogger logger;
     private readonly IAuthorizationService authorizationService;
-    private readonly UserManager<User> userManager;
 
     public SongApiController(IUnitOfWork unitOfWork,
       ILogger<SongApiController> logger,
-      IAuthorizationService authorizationService,
-      UserManager<User> userManager)
+      IAuthorizationService authorizationService)
     {
       this.unitOfWork = unitOfWork;
       this.logger = logger;
       this.authorizationService = authorizationService;
-      this.userManager = userManager;
     }
 
     [HttpGet]
     [ProducesResponseType(200)]
     [ProducesResponseType(500)]
     [AllowAnonymous]
-    public async Task<ActionResult<IActionResult>> GetSongsPage([FromQuery]PaggingQuery query)
+    public async Task<IActionResult> GetSongsPage([FromQuery]PaggingQuery query)
     {
       try
       {
@@ -90,7 +88,7 @@ namespace MusicStore.MVC.API
           dto.AlbumId = null;
 
         // Set the owner of this song to the current signedIn user
-        var currentUserId = userManager.GetUserId(User);
+        var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         dto.OwenerId = currentUserId;
 
         var songEntity = await unitOfWork.Songs.AddAsync(dto);

@@ -62,7 +62,11 @@ function App({ loadUser, user }) {
               path="/Albums/Edit/:id"
               component={ManageAlbumPage}
             />
-            <Route path="/Albums/Details/:id" component={AlbumDetails} />
+            <PrivateRoute
+              user={user}
+              path="/Albums/Details/:id"
+              component={AlbumDetails}
+            />
             <Route path="/Albums" component={AlbumsPage} />
             <Route path="/login" component={LoginPage} />
             <Route component={pageNotFound} />

@@ -3,7 +3,7 @@ import { NavLink, withRouter } from "react-router-dom";
 import OverlayNavLoader from "./OverlayNavLoader";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { isAuthenticated } from "../../services/auth.service";
+import { isAuthenticated, isAdmin } from "../../services/auth.service";
 import { logout } from "../../redux/actions/authActions";
 
 function NavHeader({ showLoader, user, logout, history }) {
@@ -11,7 +11,6 @@ function NavHeader({ showLoader, user, logout, history }) {
   const [showProfileMenu, setshowProfileMenu] = useState(false);
   const [collapseNav, setCollapseNav] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   function handleLogout() {
     setshowProfileMenu(false);
     logout();
@@ -55,44 +54,48 @@ function NavHeader({ showLoader, user, logout, history }) {
               <NavLink to="/Albums" className="nav-item nav-link">
                 Albums
               </NavLink>
-              <div className="dropdown">
-                <button
-                  className="btn nav-link btn-link dropdown dropdown-toggle"
-                  id="navbarAddDropdown"
-                  data-toggle="navbarAddDropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                  onClick={() => setshowAddMenu(!showAddMenu)}
-                >
-                  Add New
-                </button>
-                <div
-                  className={"dropdown-menu " + (showAddMenu ? "show" : "")}
-                  aria-labelledby="navbarAddDropdown"
-                >
-                  <NavLink
-                    to="/Songs/AddNewSong"
-                    className="dropdown-item"
-                    onClick={() => setshowAddMenu(false)}
+              {isLoggedIn && (
+                <div className="dropdown">
+                  <button
+                    className="btn nav-link btn-link dropdown dropdown-toggle"
+                    id="navbarAddDropdown"
+                    data-toggle="navbarAddDropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    onClick={() => setshowAddMenu(!showAddMenu)}
                   >
-                    Song
-                  </NavLink>
-                  <NavLink
-                    to="/Genres/AddNewGenre"
-                    className="dropdown-item"
-                    onClick={() => setshowAddMenu(false)}
+                    Add New
+                  </button>
+                  <div
+                    className={"dropdown-menu " + (showAddMenu ? "show" : "")}
+                    aria-labelledby="navbarAddDropdown"
                   >
-                    Genre
-                  </NavLink>
-                  <NavLink
-                    to="/Albums/AddNewAlbum"
-                    className="dropdown-item"
-                    onClick={() => setshowAddMenu(false)}
-                  >
-                    Album
-                  </NavLink>
+                    <NavLink
+                      to="/Songs/AddNewSong"
+                      className="dropdown-item"
+                      onClick={() => setshowAddMenu(false)}
+                    >
+                      Song
+                    </NavLink>
+                    {isAdmin(user) && (
+                      <NavLink
+                        to="/Genres/AddNewGenre"
+                        className="dropdown-item"
+                        onClick={() => setshowAddMenu(false)}
+                      >
+                        Genre
+                      </NavLink>
+                    )}
+                    <NavLink
+                      to="/Albums/AddNewAlbum"
+                      className="dropdown-item"
+                      onClick={() => setshowAddMenu(false)}
+                    >
+                      Album
+                    </NavLink>
+                  </div>
                 </div>
-              </div>
+              )}
               {!isLoggedIn ? (
                 <NavLink to="/login" className="nav-item nav-link">
                   Login
@@ -107,7 +110,7 @@ function NavHeader({ showLoader, user, logout, history }) {
                     aria-expanded="false"
                     onClick={() => setshowProfileMenu(!showProfileMenu)}
                   >
-                    {user.user_Name}
+                    {user.user_name}
                   </button>
                   <div
                     className={

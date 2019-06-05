@@ -4,10 +4,11 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { loadAlbumDetails } from "../../redux/actions/albumActions";
 import initialState from "../../redux/reducers/initialState";
+import { isResourseOwener } from "../../services/auth.service";
 
-function AlbumDetails({ albumId, album, loadAlbumDetails }) {
+function AlbumDetails({ albumId, album, loadAlbumDetails, user }) {
   useEffect(() => {
-    console.log("Effect Magic!");
+    console.log("Album Details Effect Magic!");
     // ToDo: Clear previous selected album
     // ToDo: Implement a proper caching
     if (albumId !== album.id) {
@@ -22,7 +23,9 @@ function AlbumDetails({ albumId, album, loadAlbumDetails }) {
     <div className="border shadow rounded-lg p-3">
       <div className="d-flex">
         <h1 className="font-weight-light text-primary mr-auto">{album.name}</h1>
-        <Link to={"Album/Edit/" + album.id}>Edit</Link>
+        {isResourseOwener(user, album.owenerId) && (
+          <Link to={"/Albums/Edit/" + album.id}>Edit</Link>
+        )}
       </div>
       <p className="lead">{album.description}</p>
       <hr className="my-4" />
@@ -61,7 +64,8 @@ function mapStateToProps(state, ownProps) {
       : initialState.albumsPage.selectedAlbum;
   return {
     albumId,
-    album
+    album,
+    user: state.auth.user
   };
 }
 
@@ -72,7 +76,8 @@ const mapDispatchToProps = {
 AlbumDetails.propTypes = {
   album: PropTypes.object.isRequired,
   loadAlbumDetails: PropTypes.func.isRequired,
-  albumId: PropTypes.number.isRequired
+  albumId: PropTypes.number.isRequired,
+  user: PropTypes.object.isRequired
 };
 
 export default connect(

@@ -26,6 +26,7 @@ class AlbumsPage extends React.Component {
         <AlbumList
           onAlbumDeleteClick={this.handleDeleteAlbum}
           albums={this.props.albums}
+          user={this.props.user}
         />
       </>
     );
@@ -35,12 +36,14 @@ class AlbumsPage extends React.Component {
 AlbumsPage.propTypes = {
   loadAlbums: PropTypes.func.isRequired,
   albums: PropTypes.array.isRequired,
-  deleteAlbum: PropTypes.func.isRequired
+  deleteAlbum: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
   return {
-    albums: state.albumsPage.albums
+    albums: state.albumsPage.albums,
+    user: state.auth.user
   };
 }
 

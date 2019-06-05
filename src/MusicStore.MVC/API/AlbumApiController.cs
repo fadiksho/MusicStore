@@ -10,6 +10,7 @@ using MusicStore.MVC.Models;
 using MusicStore.MVC.Repository.Data;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MusicStore.MVC.API
@@ -22,19 +23,16 @@ namespace MusicStore.MVC.API
     private readonly IUnitOfWork unitOfWork;
     private readonly ILogger logger;
     private readonly IAuthorizationService authorizationService;
-    private readonly UserManager<User> userManager;
     private readonly IMapper mapper;
 
     public AlbumApiController(IUnitOfWork unitOfWork,
       ILogger<SongApiController> logger,
       IAuthorizationService authorizationService,
-      UserManager<User> userManager,
       IMapper mapper)
     {
       this.unitOfWork = unitOfWork;
       this.logger = logger;
       this.authorizationService = authorizationService;
-      this.userManager = userManager;
       this.mapper = mapper;
     }
 
@@ -69,11 +67,6 @@ namespace MusicStore.MVC.API
         if (album == null)
           return NotFound();
 
-        var isAuthorized = await authorizationService
-          .AuthorizeAsync(User, album.OwenerId, AutherazationOperations.OwenResourse);
-        if (!isAuthorized.Succeeded)
-          return Unauthorized();
-
         return Ok(album);
       }
       catch (Exception ex)
@@ -95,7 +88,7 @@ namespace MusicStore.MVC.API
       try
       {
         // Set the owner of this song to the current signedIn user
-        var currentUserId = userManager.GetUserId(User);
+        var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         dto.OwenerId = currentUserId;
 
         var albumEntity = await unitOfWork.Albums.AddAsync(dto);

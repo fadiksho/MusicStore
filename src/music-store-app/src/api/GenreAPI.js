@@ -1,17 +1,25 @@
 import { handleResponse, handleError } from "./APIUtils";
+import { authHeader } from "../helper/authHelper";
 
 const baseUrl = process.env.REACT_APP_API_URL + "Genre/";
 
 export function getGenres() {
-  return fetch(baseUrl)
+  const authHeaderProps = authHeader();
+  return fetch(baseUrl, {
+    method: "GET",
+    headers: {
+      ...authHeaderProps
+    }
+  })
     .then(handleResponse)
     .catch(handleError);
 }
 
 export function addNewGenre(genreForCreatingDto) {
+  const authHeaderProps = authHeader();
   return fetch(baseUrl, {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: { "content-type": "application/json", ...authHeaderProps },
     body: JSON.stringify(genreForCreatingDto)
   })
     .then(handleResponse)
@@ -19,9 +27,10 @@ export function addNewGenre(genreForCreatingDto) {
 }
 
 export function updateGenre(genreForUpdatingDto) {
+  const authHeaderProps = authHeader();
   return fetch(baseUrl + genreForUpdatingDto.id, {
     method: "PUT",
-    headers: { "content-type": "application/json" },
+    headers: { "content-type": "application/json", ...authHeaderProps },
     body: JSON.stringify(genreForUpdatingDto)
   })
     .then(handleResponse)
@@ -29,7 +38,11 @@ export function updateGenre(genreForUpdatingDto) {
 }
 
 export function deleteGenre(genreId) {
-  return fetch(baseUrl + genreId, { method: "DELETE" })
+  const authHeaderProps = authHeader();
+  return fetch(baseUrl + genreId, {
+    method: "DELETE",
+    headers: { ...authHeaderProps }
+  })
     .then(handleResponse)
     .catch(handleError);
 }

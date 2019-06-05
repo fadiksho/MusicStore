@@ -17,8 +17,8 @@ function LoginPage({ history, location, login }) {
         const redirectUrl = location.state ? location.state.redirectTo : "/";
         history.push(redirectUrl);
       })
-      .catch(error => {
-        throw error;
+      .catch(errors => {
+        setIsSaving(false);
       });
   }
 

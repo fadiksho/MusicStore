@@ -8,7 +8,7 @@ function AlbumForm({ albumId, albums, isSaving, handleAlbumFormSubmit }) {
     if (albums.length > 0 && albumId !== 0) {
       const album = albums.find(a => a.id === albumId);
       setAlbumName(album.name);
-      if (album.description) setAlbumDescription(album);
+      if (album.description) setAlbumDescription(album.description);
     } else {
       setAlbumName("");
       setAlbumDescription("");
@@ -38,12 +38,12 @@ function AlbumForm({ albumId, albums, isSaving, handleAlbumFormSubmit }) {
         />
       </div>
       <div className="form-group">
-        <label htmlFor="albumDescriptionId">Name</label>
+        <label htmlFor="albumDescriptionId">Description</label>
         <textarea
           id="albumDescriptionId"
           name="albumDescription"
           className="form-control"
-          placeholder="Enter genre name..."
+          placeholder="Enter album description..."
           value={albumDescription}
           onChange={event => setAlbumDescription(event.target.value)}
         />

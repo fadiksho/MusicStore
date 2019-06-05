@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import { isResourseOwener } from "../../services/auth.service";
 
-const SongList = ({ songs, onSongDeleteClick }) => (
+const SongList = ({ songs, onSongDeleteClick, user }) => (
   <div className="container-fluid">
     <table className="table table-responsive-sm">
       <thead>
@@ -41,21 +42,19 @@ const SongList = ({ songs, onSongDeleteClick }) => (
                   <span className="text-warning">not specified</span>
                 )}
               </td>
-              <td>
-                <Link
-                  to={"Songs/Edit/" + song.id}
-                  asp-action="Edit"
-                  asp-route-id="@song.Id"
-                >
-                  Edit
-                </Link>
-                <button
-                  className="ml-2 btn btn-sm btn-outline-danger"
-                  onClick={() => onSongDeleteClick(song)}
-                >
-                  Delete
-                </button>
-              </td>
+              {isResourseOwener(user, song.owenerId) && (
+                <td>
+                  <Link to={"Songs/Edit/" + song.id} asp-action="Edit">
+                    Edit
+                  </Link>
+                  <button
+                    className="ml-2 btn btn-sm btn-outline-danger"
+                    onClick={() => onSongDeleteClick(song)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              )}
             </tr>
           );
         })}
@@ -67,7 +66,8 @@ const SongList = ({ songs, onSongDeleteClick }) => (
 
 SongList.propTypes = {
   songs: PropTypes.array.isRequired,
-  onSongDeleteClick: PropTypes.func.isRequired
+  onSongDeleteClick: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired
 };
 
 export default SongList;

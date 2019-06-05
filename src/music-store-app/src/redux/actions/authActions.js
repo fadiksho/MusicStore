@@ -23,10 +23,10 @@ export function login(loginForm) {
       .then(token => {
         dispatch(setToken(token));
       })
-      .catch(error => {
+      .catch(errors => {
         dispatch(apiCallError());
         // ToDo: Implement loginFailure;
-        throw error;
+        throw errors;
       });
   };
 }

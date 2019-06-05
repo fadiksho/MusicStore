@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import { isResourseOwener } from "../../services/auth.service";
 
-const AlbumList = ({ albums, onAlbumDeleteClick }) => (
+const AlbumList = ({ albums, onAlbumDeleteClick, user }) => (
   <div className="container-fluid">
     <table className="table table-responsive-sm">
       <thead>
@@ -21,13 +22,17 @@ const AlbumList = ({ albums, onAlbumDeleteClick }) => (
               </td>
               <td>{album.description}</td>
               <td>
-                <Link to={"Albums/Edit/" + album.id}>Edit</Link>
-                <button
-                  className="ml-2 btn btn-sm btn-outline-danger"
-                  onClick={() => onAlbumDeleteClick(album)}
-                >
-                  Delete
-                </button>
+                {isResourseOwener(user, album.owenerId) && (
+                  <>
+                    <Link to={"Albums/Edit/" + album.id}>Edit</Link>
+                    <button
+                      className="ml-2 btn btn-sm btn-outline-danger"
+                      onClick={() => onAlbumDeleteClick(album)}
+                    >
+                      Delete
+                    </button>
+                  </>
+                )}
               </td>
             </tr>
           );
@@ -39,7 +44,8 @@ const AlbumList = ({ albums, onAlbumDeleteClick }) => (
 
 AlbumList.propTypes = {
   albums: PropTypes.array.isRequired,
-  onAlbumDeleteClick: PropTypes.func.isRequired
+  onAlbumDeleteClick: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired
 };
 
 export default AlbumList;

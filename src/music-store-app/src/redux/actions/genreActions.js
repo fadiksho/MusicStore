@@ -43,8 +43,8 @@ export function deleteGenre(genre) {
         dispatch(deleteGenreSuccess(genre));
       })
       .catch(error => {
-        // ToDo: Implement loadGenreFailure;
-        throw error;
+        dispatch(apiCallError());
+        // ToDo: Implement deleteGenreFailure;
       });
   };
 }

@@ -8,15 +8,12 @@ class GenresPage extends React.Component {
   componentDidMount() {
     this.props.loadGenres().catch(error => {
       // ToDo: handle error
-      throw error;
+      console.log(error);
     });
   }
 
   handleDeleteGenre = genre => {
-    this.props.deleteGenre(genre).catch(error => {
-      // ToDo: handle error
-      throw error;
-    });
+    this.props.deleteGenre(genre);
   };
 
   render() {
@@ -26,6 +23,7 @@ class GenresPage extends React.Component {
         <GenreList
           onGenreDeleteClick={this.handleDeleteGenre}
           genres={this.props.genres}
+          user={this.props.user}
         />
       </>
     );
@@ -35,12 +33,14 @@ class GenresPage extends React.Component {
 GenresPage.propTypes = {
   loadGenres: PropTypes.func.isRequired,
   genres: PropTypes.array.isRequired,
-  deleteGenre: PropTypes.func.isRequired
+  deleteGenre: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
   return {
-    genres: state.genresPage.genres
+    genres: state.genresPage.genres,
+    user: state.auth.user
   };
 }
 

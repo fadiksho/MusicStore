@@ -1,17 +1,23 @@
 import { handleResponse, handleError } from "./APIUtils";
+import { authHeader } from "../helper/authHelper";
 
 const baseUrl = process.env.REACT_APP_API_URL + "song/";
 
 export function getSongsPage() {
-  return fetch(baseUrl)
+  const authHeaderProps = authHeader();
+  return fetch(baseUrl, {
+    method: "GET",
+    headers: { ...authHeaderProps }
+  })
     .then(handleResponse)
     .catch(handleError);
 }
 
 export function addNewSong(songForCreatingDto) {
+  const authHeaderProps = authHeader();
   return fetch(baseUrl, {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: { "content-type": "application/json", ...authHeaderProps },
     body: JSON.stringify(songForCreatingDto)
   })
     .then(handleResponse)
@@ -19,9 +25,10 @@ export function addNewSong(songForCreatingDto) {
 }
 
 export function updateSong(songForUpdatingDto) {
+  const authHeaderProps = authHeader();
   return fetch(baseUrl + songForUpdatingDto.id, {
     method: "PUT",
-    headers: { "content-type": "application/json" },
+    headers: { "content-type": "application/json", ...authHeaderProps },
     body: JSON.stringify(songForUpdatingDto)
   })
     .then(handleResponse)
@@ -29,13 +36,25 @@ export function updateSong(songForUpdatingDto) {
 }
 
 export function getSong(songId) {
-  return fetch(baseUrl + songId)
+  const authHeaderProps = authHeader();
+  return fetch(baseUrl + songId, {
+    method: "GET",
+    headers: {
+      ...authHeaderProps
+    }
+  })
     .then(handleResponse)
     .catch(handleError);
 }
 
 export function deleteSong(songId) {
-  return fetch(baseUrl + songId, { method: "DELETE" })
+  const authHeaderProps = authHeader();
+  return fetch(baseUrl + songId, {
+    method: "DELETE",
+    headers: {
+      ...authHeaderProps
+    }
+  })
     .then(handleResponse)
     .catch(handleError);
 }

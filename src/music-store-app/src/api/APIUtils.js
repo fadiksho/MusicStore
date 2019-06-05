@@ -6,9 +6,14 @@ export async function handleResponse(response) {
     return resolveJsonReferences(await response.json());
   }
   if (response.status === 400) {
-    // ToDo: Server side validation returns json.
-    const error = await response.text();
-    throw new Error(error);
+    const jsonErrors = resolveJsonReferences(await response.json());
+    throw jsonErrors;
+  }
+  if (response.status === 401) {
+    return Promise.reject({
+      status: 401,
+      message: "You are not authorize!"
+    });
   }
   throw new Error("Network response was not ok.");
 }

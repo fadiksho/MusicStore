@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Identity;
@@ -31,7 +32,7 @@ namespace MusicStore.MVC.Authorization
         return Task.CompletedTask;
       }
 
-      var userId = userManager.GetUserId(context.User);
+      var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
       if (resource == userId)
       {
         context.Succeed(requirement);
